@@ -41,7 +41,7 @@ course-materials/    Notes, scripts, examples, research
 2. Define the expected behavior from the specification before writing or changing any code.
 3. Confirm the actual application checkout and inspect source, build descriptors, call sites and dependencies before proposing commands or APIs. Identify build, test and startup commands from that project, using its wrapper when available; do not assume a framework, build tool or runtime version.
 4. Establish missing or ambiguous requirements with the user and record agreed application scope in its PRD before implementation. Routine course-document changes do not need an application PRD or ADR.
-5. Use the project's selected package manager and the actual shell (Bash on the Ubuntu course VM, PowerShell when working on Windows). Inspect `package.json` or the build descriptor before choosing commands. Do not scaffold a finished application before the PRD and ADR exercise.
+5. Use the project's selected package manager and the actual shell (Bash on Linux or PowerShell on Windows, as applicable). Inspect `package.json` or the build descriptor before choosing commands. Do not scaffold a finished application before the PRD and ADR exercise.
 
 ### Looking up tool and library facts
 1. For CLI syntax (`gh`, `glab`, `codex`, build tools), run the tool's built-in help first: `<tool> --help` or `<tool> <command> --help`.
