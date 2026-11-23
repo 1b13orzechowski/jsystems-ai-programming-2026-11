@@ -1,33 +1,55 @@
-# COURSE-NAME (COURSE-ORGANIZER)
+# AI dla programistów - od pomysłu do MVP (JSystems)
 
-**Materiały szkoleniowe: [devpowers.com/szkolenia/COURSE-SITE](https://devpowers.com/szkolenia/COURSE-SITE/)**
+**Materiały szkoleniowe: [devpowers.com/szkolenia/jsystems/ai-programming-2026-11](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/)**
 
-- [Zakres i wszystkie materiały](https://devpowers.com/szkolenia/COURSE-SITE/index.html#prezentacje)
-- [Slajdy](https://devpowers.com/szkolenia/COURSE-SITE/index.html#prezentacje)
-- [Biblioteka promptów](https://devpowers.com/szkolenia/COURSE-SITE/prompty.html) · [Ćwiczenia](https://devpowers.com/szkolenia/COURSE-SITE/cwiczenia.html) · [Checklisty](https://devpowers.com/szkolenia/COURSE-SITE/checklisty.html) · [Słownik AI](https://devpowers.com/szkolenia/COURSE-SITE/slownik-ai.html)
-- [Wyniki ankiety przed szkoleniem](https://devpowers.com/szkolenia/COURSE-SITE/raport-przed.html) · [Odpowiedzi na pytania z kursu](https://devpowers.com/szkolenia/COURSE-SITE/pytania.html) (uzupełniamy po każdym dniu)
+- [Zakres i wszystkie materiały](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/index.html#prezentacje)
+- [Slajdy](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/index.html#prezentacje)
+- [Biblioteka promptów](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/prompty.html) · [Ćwiczenia](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/cwiczenia.html) · [Checklisty](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/checklisty.html) · [Słownik AI](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/slownik-ai.html)
+- [Wyniki ankiety przed szkoleniem](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/raport-przed.html) · [Odpowiedzi na pytania z kursu](https://devpowers.com/szkolenia/jsystems/ai-programming-2026-11/pytania.html) (uzupełniamy po każdym dniu)
 
 
-Repozytorium uczestnika szkolenia COURSE-ORGANIZER (COURSE-DATES, online, COURSE-HOURS). Przerwy w godzinach COURSE-BREAKS. W czasie szkolenia (COURSE-DURATION) przechodzimy pełny cykl wytwarzania oprogramowania z agentami AI: od pomysłu i wymagań (PRD), przez decyzje architektoniczne (ADR), plan, implementację i testy, po code review, bezpieczeństwo i CI/CD.
+Repozytorium uczestnika szkolenia JSystems (23-27.11.2026, online, 09:00-16:00, Europe/Warsaw). Przerwy w godzinach 11:00-11:15 i 13:00-13:30; dodatkowa przerwa około 5 minut w okolicach 14:30 lub 15:00 tylko w razie potrzeby. W czasie szkolenia (5 dni) przechodzimy pełny cykl wytwarzania oprogramowania z agentami AI: od pomysłu i wymagań (PRD), przez decyzje architektoniczne (ADR), plan, implementację i testy, po code review, bezpieczeństwo i CI/CD.
 
-Głównym agentem warsztatu jest **OpenAI Codex CLI**, a te same koncepcje pokazujemy także w **Claude Code** i **GitHub Copilot**. Możesz pracować w swoim stosie (np. C# / .NET, Java, Python); przykład prowadzącego powstaje w TypeScript.
+Głównym agentem warsztatu jest **Claude Code**, a te same koncepcje porównujemy także w **OpenAI Codex CLI** i **GitHub Copilot**. Krótko porównujemy również Antigravity z Gemini 4 Neon. Narzędzia do porównań nie wymagają osobnej instalacji przed kursem. Możesz pracować w swoim stosie (np. Java, JavaScript / TypeScript, C# / .NET, Python); przykład prowadzącego powstaje w TypeScript.
 
 Głównym projektem grupy jest aplikacja do obsługi zwrotów i reklamacji elektroniki, rozwijana według PRD uzgodnionego podczas zajęć. Możesz też pracować nad własnym pomysłem, stosując ten sam proces. Po PRD omów architekturę i biblioteki, zapisz decyzje w ADR, ułóż plan i zależności zadań, a potem implementuj, testuj i przeglądaj zmiany przed utworzeniem PR. Przykładowy prompt PRD w `course-materials/` nie zastępuje dokumentu poprawionego z grupą.
 
-## Start na Windows
+## Start na maszynie szkoleniowej
 
-Utwórz [własny fork na GitHubie](https://github.com/COURSE-REPO-OWNER/COURSE-REPO/fork). W swoim forku kliknij **Code**, wybierz **HTTPS** i skopiuj adres. Jeśli kurs nie korzysta z forków, użyj adresu repozytorium kursu. Otwórz PowerShell w katalogu, w którym chcesz trzymać projekt, i wykonuj kolejno po jednym poleceniu:
+Połącz się z przygotowaną maszyną szkoleniową i otwórz terminal w katalogu, w którym chcesz trzymać projekt. Wykonuj kolejno po jednym poleceniu:
+
+```text
+git clone https://github.com/LucasMatuszewski/jsystems-ai-programming-2026-11.git
+```
+
+```text
+cd jsystems-ai-programming-2026-11
+```
+
+```text
+git switch -c feat/moja-aplikacja
+```
+
+```text
+claude
+```
+
+Claude Code uruchamiasz w katalogu głównym repozytorium. Przejrzyj komunikat zaufania do projektu i zaakceptuj przygotowane repozytorium. Uprawnienia i hooki projektu są w `.claude/settings.json`, a instrukcje w `CLAUDE.md` i `AGENTS.md`. W panelu `/mcp` przejrzyj konfigurację serwerów i zatwierdź tylko te, których używasz w ćwiczeniu. Na początku `app/` zawiera wyłącznie README; wymagania i aplikację tworzymy podczas zajęć.
+
+## Opcjonalnie: start na własnym Windows
+
+Utwórz [własny fork na GitHubie](https://github.com/LucasMatuszewski/jsystems-ai-programming-2026-11/fork). W swoim forku kliknij **Code**, wybierz **HTTPS** i skopiuj adres. Jeśli kurs nie korzysta z forków, użyj adresu repozytorium kursu. Otwórz PowerShell w katalogu, w którym chcesz trzymać projekt, i wykonuj kolejno po jednym poleceniu:
 
 ```powershell
 $forkUrl = Read-Host "Wklej adres HTTPS swojego forka"
 ```
 
 ```powershell
-git clone $forkUrl COURSE-REPO
+git clone $forkUrl jsystems-ai-programming-2026-11
 ```
 
 ```powershell
-Set-Location COURSE-REPO
+Set-Location jsystems-ai-programming-2026-11
 ```
 
 ```powershell
@@ -35,10 +57,12 @@ git switch -c feat/moja-aplikacja
 ```
 
 ```powershell
-codex
+claude
 ```
 
-Każde polecenie jest w osobnym bloku, bo Windows PowerShell 5.1 nie obsługuje `&&`, a długie polecenia łatwo uszkodzić przy wklejaniu. Codex uruchamiasz w katalogu głównym repozytorium. Przejrzyj komunikat zaufania do projektu i zaakceptuj przygotowane repozytorium. Wspólne ustawienia są w `.codex/config.toml`; domyślny profil `course-tools` pozwala edytować projekt i korzystać z sieci, w tym instalować zależności. Zarządzana polityka maszyny może dodatkowo ograniczać dostęp. Zanim dodasz prawdziwy klucz API, przeczytaj sekcję [Granice](#granice).
+Każde polecenie jest w osobnym bloku, bo Windows PowerShell 5.1 nie obsługuje `&&`, a długie polecenia łatwo uszkodzić przy wklejaniu. Claude Code uruchamiasz w katalogu głównym repozytorium. Przejrzyj komunikat zaufania do projektu i zaakceptuj przygotowane repozytorium.
+
+Podczas opcjonalnego porównania z Codex wspólne ustawienia są w `.codex/config.toml`; domyślny profil `course-tools` pozwala edytować projekt i korzystać z sieci, w tym instalować zależności. Zarządzana polityka maszyny może dodatkowo ograniczać dostęp. Zanim dodasz prawdziwy klucz API, przeczytaj sekcję [Granice](#granice).
 
 ## Biblioteka dodatkowa
 

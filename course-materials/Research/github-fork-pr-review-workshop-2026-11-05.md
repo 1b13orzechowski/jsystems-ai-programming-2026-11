@@ -1,11 +1,11 @@
 # Fork, pull request i odpowiedź na code review
 
-Sprawdzone 5.11.2026 na kursie z forkami uczestników. Materiał opcjonalny dla kursów na GitHubie; `COURSE-REPO-OWNER/COURSE-REPO` to repozytorium kursu (upstream). Ćwiczenie: wypchnij aplikację do własnego forka, utwórz PR do repo prowadzącego, przeczytaj review, sprawdź uwagi, popraw kod i opublikuj jedną zbiorczą odpowiedź. Nie mergujemy różnych aplikacji uczestników do wspólnego main.
+Sprawdzone 5.11.2026 na kursie z forkami uczestników. Materiał opcjonalny dla kursów na GitHubie; `LucasMatuszewski/jsystems-ai-programming-2026-11` to repozytorium kursu (upstream). Ćwiczenie: wypchnij aplikację do własnego forka, utwórz PR do repo prowadzącego, przeczytaj review, sprawdź uwagi, popraw kod i opublikuj jedną zbiorczą odpowiedź. Nie mergujemy różnych aplikacji uczestników do wspólnego main.
 
 ## Dwa repozytoria i dwa rodzaje uprawnień
 
 - **Head:** Twoja gałąź w Twoim forku. Tu zapisujesz poprawki i robisz push.
-- **Base:** `COURSE-REPO-OWNER/COURSE-REPO:main`. Tu należy numer PR, komentarze, review i wątki.
+- **Base:** `LucasMatuszewski/jsystems-ai-programming-2026-11:main`. Tu należy numer PR, komentarze, review i wątki.
 
 Fine-grained PAT wybrany tylko dla Twojego forka nie daje prawa tworzenia PR lub dodawania komentarzy w repo prowadzącego. Publiczny odczyt nie oznacza prawa zapisu przez ten token. Token ma jednego resource ownera i określony wybór repozytoriów; nie można po prostu dopisać drugiego osobistego właściciela do tego samego zakresu.
 
@@ -24,7 +24,7 @@ Po pushu swojej gałęzi w GitHub wybierz **Contribute / Open pull request** alb
 Tworzenie PR przez API/CLI wymaga osobno wybranego uwierzytelnienia z uprawnieniami do repo bazowego. Poniższy kształt jest dla takiego świadomie skonfigurowanego wariantu; **nie jest obejściem tokenu ograniczonego do forka**:
 
 ```bash
-gh pr create --repo COURSE-REPO-OWNER/COURSE-REPO --base main --head STUDENT_LOGIN:exercise-branch --title 'Exercise: concrete change' --body-file pr-body.md
+gh pr create --repo LucasMatuszewski/jsystems-ai-programming-2026-11 --base main --head STUDENT_LOGIN:exercise-branch --title 'Exercise: concrete change' --body-file pr-body.md
 ```
 
 Zastąp placeholdery. `gh pr create --dry-run` nie jest bezpiecznym testem braku zapisu: help ostrzega, że może wykonać push.
@@ -66,9 +66,9 @@ Dla fork PR nie uruchamiaj nieufnego kodu z dostępem do sekretów repo bazowego
 Nie wystarcza `gh pr view --comments`: zbierz podsumowania review, inline comments i odpowiedzi, komentarze konwersacji, stan wątków oraz checks aktualnego commita.
 
 ```bash
-gh api --paginate repos/COURSE-REPO-OWNER/COURSE-REPO/pulls/PR_NUMBER/reviews
-gh api --paginate repos/COURSE-REPO-OWNER/COURSE-REPO/pulls/PR_NUMBER/comments
-gh api --paginate repos/COURSE-REPO-OWNER/COURSE-REPO/issues/PR_NUMBER/comments
+gh api --paginate repos/LucasMatuszewski/jsystems-ai-programming-2026-11/pulls/PR_NUMBER/reviews
+gh api --paginate repos/LucasMatuszewski/jsystems-ai-programming-2026-11/pulls/PR_NUMBER/comments
+gh api --paginate repos/LucasMatuszewski/jsystems-ai-programming-2026-11/issues/PR_NUMBER/comments
 ```
 
 Zastąp `PR_NUMBER`. Wątki resolved/unresolved sprawdź w **Files changed** albo przez GraphQL `reviewThreads.isResolved`. Skrypty odczytu (numer PR, opcjonalnie `OWNER/REPO`): [Bash](../agent-configs/github-review/read-review.sh), [PowerShell](../agent-configs/github-review/read-review.ps1). To odczyty, nie test uprawnień zapisu do upstream. Jeśli credential nie pozwala nawet na odczyt publicznej strony, użyj przeglądarki lub publicznego REST bez credential; nie poszerzaj scope automatycznie.
