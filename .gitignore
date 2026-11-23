@@ -1,0 +1,37 @@
+node_modules/
+.next/
+out/
+coverage/
+dist/
+build/
+*.db
+.env*
+!.env.example
+secrets
+.DS_Store
+# Project skills in .agents/skills/ and skills-lock.json are committed: skills built
+# in class must reach the repository. .claude/skills/ holds the CLI's links to them.
+.claude/skills/
+__pycache__/
+*.pyc
+.playwright-cli
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Local Codex history, credentials and runtime state; keep shared config and rules.
+.codex/auth.json
+.codex/sessions/
+.codex/archived_sessions/
+.codex/history.jsonl
+.codex/session_index.jsonl
+.codex/log/
+.codex/logs/
+.codex/tmp/
+.codex/*.sqlite*
+
+# Private agent briefs and Java build artifacts
+.agent-briefs/
+**/target/
+*.class
+/.idea
