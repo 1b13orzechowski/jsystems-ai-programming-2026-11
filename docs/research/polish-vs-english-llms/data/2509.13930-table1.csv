@@ -1,0 +1,8 @@
+# Source: arXiv 2509.13930v2 "Linguistic Nepotism" Table 1, citation accuracy (%) in multilingual RAG; DOM extract by coordinator 2026-11-24. Russian = only Slavic language. All RU deltas significant (t-test, Bonferroni).
+lang,LLaMA-3.1-8B,Qwen-3-8B,Aya23-8B,Qwen-3-14B,Gemma-3-27B,LLaMA-3.3-70B
+English,67.4,62.6,60.0,83.0,86.2,85.9
+French,62.9,48.4,48.5,76.0,79.0,77.4
+Russian,62.1,50.4,48.1,74.8,77.1,74.5
+Spanish,62.1,51.9,49.1,77.4,80.2,76.0
+Chinese,59.9,49.2,46.3,73.5,75.4,74.1
+Swahili,53.0,30.4,22.4,54.7,74.0,67.3

@@ -1,0 +1,17 @@
+# Source: arXiv 2605.24718 (Ovcharov 2026, single-author preprint) Table 4: mean tokenizer fertility (tokens/word) across 6 models on SIB-200 parallel text; DOM extract by coordinator 2026-11-24. Title in HTML says "24 European Languages".
+lang,family,mean,min,max
+English,English,1.23,1.21,1.25
+Spanish,Romance,1.46,1.31,1.61
+French,Romance,1.52,1.40,1.67
+Italian,Romance,1.67,1.49,1.86
+German,Germanic,1.76,1.55,1.98
+Polish,Slavic,2.25,1.88,2.60
+Czech,Slavic,2.28,2.03,2.93
+Slovenian,Slavic,2.28,2.02,2.57
+Croatian,Slavic,2.31,2.01,2.58
+Bulgarian,Slavic,2.33,1.86,2.84
+Slovak,Slavic,2.45,2.13,2.93
+Ukrainian,Slavic,2.66,2.16,3.62
+Hungarian,Uralic,2.71,2.21,3.14
+Finnish,Uralic,2.99,2.61,3.41
+Greek,Hellenic,3.09,2.29,5.73

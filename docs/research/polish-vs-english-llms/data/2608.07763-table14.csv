@@ -1,0 +1,18 @@
+# Source: arXiv 2608.07763 (PoVisLE) HTML Table 14, DOM extract by coordinator 2026-11-24. Polish-native VQA sample, translated to EN/DE. Delta relative to PL.
+model,PL,EN,EN_delta,DE,DE_delta
+Qwen3.5-397B-A17B (Thinking),75.16,68.12,-7.04,68.15,-7.01
+Gemma-4-31B-it (Thinking),72.51,72.02,-0.48,71.55,-0.95
+Claude Sonnet 5,69.94,66.94,-3.00,66.03,-3.91
+GPT-5.4,68.35,70.40,+2.06,63.53,-4.82
+Gemma-4-31B-it,63.96,60.15,-3.82,59.04,-4.92
+Qwen3.5-397B-A17B,61.89,60.56,-1.33,55.64,-6.25
+GLM-4.6V,61.72,56.31,-5.41,58.03,-3.69
+Qwen3.5-27B (Thinking),56.65,58.35,+1.70,55.28,-1.37
+Qwen3.5-27B,50.83,51.84,+1.01,50.18,-0.65
+Qwen3.5-9B (Thinking),49.54,51.77,+2.23,49.44,-0.09
+LLaVA-Bielik-11B-v2.6,40.44,39.02,-1.42,36.94,-3.50
+InternVL3.5-38B,39.88,41.66,+1.79,40.81,+0.93
+Ministral-3-14B-2512,39.54,41.65,+2.11,37.66,-1.88
+Qwen3.5-9B,38.75,47.04,+8.29,44.83,+6.08
+Ministral-3-14B-2512 (Thinking),36.08,39.06,+2.97,37.06,+0.98
+LLaVA-PLLuM-12B,34.80,32.90,-1.90,33.08,-1.72

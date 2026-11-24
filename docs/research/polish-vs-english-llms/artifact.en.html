@@ -1,0 +1,430 @@
+<title>Is Polish Better for Prompting?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column (≤ 46rem prose) inside a 68rem frame; charts span the frame; sticky section index under the header. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --tint:#eaeef4; --ink:#141820; --ink-2:#434c5e; --muted:#6c7587; --line:#dce1e9;
+  --en:#2a78d6; --pl:#eb6834; --slav:#1baf7a; --other:#c4c9d2; --accent:#4a3aa7; --accent-ink:#ffffff;
+  --good:#008300; --warn:#a86f00; --bad:#c23b3a; --na:#6c7587;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101318; --surface:#181c23; --tint:#1f242d; --ink:#eef1f6; --ink-2:#b7bfcc; --muted:#8c94a3; --line:#2b313c;
+  --en:#3987e5; --pl:#d95926; --slav:#199e70; --other:#4a515e; --accent:#9085e9; --accent-ink:#101318;
+  --good:#3fae3f; --warn:#d9a03a; --bad:#e66767; --na:#8c94a3; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#101318; --surface:#181c23; --tint:#1f242d; --ink:#eef1f6; --ink-2:#b7bfcc; --muted:#8c94a3; --line:#2b313c;
+  --en:#3987e5; --pl:#d95926; --slav:#199e70; --other:#4a515e; --accent:#9085e9; --accent-ink:#101318;
+  --good:#3fae3f; --warn:#d9a03a; --bad:#e66767; --na:#8c94a3; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--f-body);margin:0}
+.wrap{max-width:68rem;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:0 4rem}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,6vw,4.2rem);font-weight:800}
+h2{font-size:clamp(1.55rem,3.2vw,2.15rem);font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.prose{max-width:46rem;display:grid;gap:.8rem;color:var(--ink-2)}
+.prose strong{color:var(--ink)}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.eyebrow{font:600 .78rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* header */
+header.hero{padding-block:3.2rem 2rem;display:grid;gap:1.4rem}
+.hero .lede{font-size:1.25rem;max-width:44rem;color:var(--ink-2)}
+.claim{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.claim>div{padding:1.3rem 1.4rem;display:grid;gap:.6rem;align-content:start;min-width:0}
+.claim>div+div{border-left:1px solid var(--line)}
+@media (max-width:640px){.claim>div+div{border-left:0;border-top:1px solid var(--line)}}
+.claim .head{font:700 1.45rem/1.2 var(--f-display)}
+.claim .head s{text-decoration-thickness:2px;text-decoration-color:var(--bad)}
+.scorepair{display:flex;flex-wrap:wrap;gap:1.4rem;align-items:baseline}
+.scorepair b{font:700 2.3rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.scorepair span{display:block;font-size:.85rem;color:var(--muted)}
+.verdict{font:600 1.15rem/1.45 var(--f-body);color:var(--ink);background:var(--tint);border-radius:10px;padding:1rem 1.2rem;max-width:52rem}
+.verdict b{color:var(--accent)}
+
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-inline:calc(-1 * clamp(16px,4vw,40px));padding:.55rem clamp(16px,4vw,40px);overflow-x:auto;white-space:nowrap}
+nav.toc a{display:inline-block;margin-right:1.1rem;font:600 .9rem var(--f-body);color:var(--ink-2);text-decoration:none}
+nav.toc a:hover{color:var(--accent)}
+
+section{padding-block:3rem 0;display:grid;gap:1.2rem;scroll-margin-top:3rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.1rem clamp(.8rem,2.5vw,1.4rem);display:grid;gap:.9rem;min-width:0}
+.controls{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.controls .lbl{font:600 .8rem var(--f-mono);color:var(--muted);margin-right:.3rem;text-transform:uppercase;letter-spacing:.06em}
+.chip{font:600 .88rem var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:.32rem .8rem;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.summary{font-size:1rem;color:var(--ink)}
+.summary .mono{font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;font-size:.88rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:.4rem;vertical-align:-1px}
+.chart{width:100%;min-width:0;overflow-x:auto}
+.chart svg{display:block}
+.chart text{fill:var(--ink-2);font-family:var(--f-body)}
+.chart .val{fill:var(--ink);font-family:var(--f-mono);font-size:11px}
+.chart .axis{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.src{font-size:.85rem;color:var(--muted)}
+.src a{color:var(--muted)}
+.note{font-size:.92rem;color:var(--ink-2);border-left:3px solid var(--line);padding-left:.8rem}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem}
+.fact{border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem;background:var(--surface);display:grid;gap:.35rem;align-content:start}
+.fact .k{font:600 .75rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.fact .v{font-size:.98rem;color:var(--ink)}
+
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.toggle button{font:600 .9rem var(--f-body);border:0;background:var(--surface);color:var(--ink-2);padding:.45rem .9rem;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lens{display:grid;gap:.5rem}
+.lens ul{margin:0;padding-left:1.1rem;display:grid;gap:.35rem;color:var(--ink-2)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:.8rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem;display:grid;gap:.6rem;align-content:start;min-width:0}
+.card .t{font-weight:700}
+.card .s{font-size:.82rem;color:var(--muted)}
+.mini{display:grid;gap:.35rem}
+.mini .row{display:grid;grid-template-columns:7.2rem 1fr 3rem;gap:.5rem;align-items:center;font-size:.86rem}
+.mini .bar{height:12px;border-radius:0 4px 4px 0;background:var(--other)}
+.mini .num{font-family:var(--f-mono);font-size:.82rem;text-align:right}
+
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.8rem;align-items:end}
+.calc label{display:grid;gap:.3rem;font-size:.88rem;color:var(--ink-2)}
+.calc input,.calc select{font:600 1rem var(--f-mono);padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.8rem}
+.out div{border-top:3px solid var(--line);padding-top:.5rem}
+.out .en{border-color:var(--en)} .out .pl{border-color:var(--pl)}
+.out b{display:block;font:700 1.6rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.out span{font-size:.85rem;color:var(--muted)}
+
+table.matrix{width:100%;border-collapse:collapse;font-size:.95rem}
+table.matrix th,table.matrix td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+table.matrix th{font:600 .75rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:.35rem;font:600 .8rem var(--f-body);border-radius:999px;padding:.15rem .6rem;border:1px solid currentColor;white-space:nowrap}
+.pill.en{color:var(--en)} .pill.tie{color:var(--warn)} .pill.na{color:var(--na)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.strength{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+
+ol.recs,ol.steps{margin:0;padding-left:1.3rem;display:grid;gap:.6rem;max-width:50rem}
+ol.recs li::marker,ol.steps li::marker{font-family:var(--f-mono);color:var(--accent);font-weight:600}
+.sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:.3rem 1.5rem;font-size:.9rem;padding-left:1.2rem;margin:0}
+.sources li{color:var(--ink-2)}
+.badge{font:600 .7rem var(--f-mono);color:var(--good);border:1px solid currentColor;border-radius:4px;padding:0 .3rem;margin-left:.3rem;white-space:nowrap}
+
+#tip{position:fixed;pointer-events:none;z-index:20;background:var(--ink);color:var(--bg);font:500 .82rem/1.35 var(--f-body);padding:.45rem .6rem;border-radius:8px;max-width:16rem;opacity:0;transition:opacity .12s}
+#tip b{font-family:var(--f-mono)}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">Research brief · 24 November 2026 · JSystems AI course</span>
+  <h1>Is Polish better than English for prompting AI?</h1>
+  <p class="lede">In 2025 headlines said Polish beats English for talking to AI. We traced the claim to its source, then checked it against newer 2025–2026 studies on retrieval, RAG, reasoning and agent-style tasks. Every number here was re-read from the paper's own table.</p>
+  <div class="claim">
+    <div>
+      <span class="eyebrow">The headline</span>
+      <p class="head"><s>“Polish is the best language for prompting AI”</s></p>
+      <p class="src">Spider's Web, Polskie Radio and others, Oct–Nov 2025</p>
+    </div>
+    <div>
+      <span class="eyebrow">What the paper measured</span>
+      <div class="scorepair">
+        <div><b style="color:var(--pl)">88%</b><span>Polish</span></div>
+        <div><b style="color:var(--en)">83.9%</b><span>English · 6th of 26</span></div>
+      </div>
+      <p>Average accuracy at finding a number hidden in a 64K–128K-token novel, across 7 models from early 2025. A different novel for each language. No significance test.</p>
+    </div>
+  </div>
+  <p class="verdict">Short answer: <b>no</b>. With the same model, English is usually equal or better. For 2026 frontier models the gap is small (about 0–3 points). What hurts most is not the language of your data but writing the <b>instructions</b> or forcing the model's <b>thinking</b> in a non-English language.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#source">Source</a><a href="#agents">Agents 2026</a><a href="#same">Same model, two languages</a><a href="#instructions">Instruction language</a><a href="#reasoning">Reasoning</a><a href="#tokens">Token cost</a><a href="#answer">Answer</a><a href="#method">Method</a>
+  </nav>
+</header>
+
+<section id="source">
+  <span class="eyebrow">01 · OneRuler, arXiv 2503.01996</span>
+  <h2>The source: a long-context retrieval benchmark, not a prompting study</h2>
+  <div class="prose"><p>OneRuler (Kim, Russell, Karpińska, Iyyer; University of Maryland, Microsoft, UMass Amherst; arXiv 2503.01996, v3 30 Sep 2025) extends the RULER benchmark to 26 languages. Models must find planted “needles” in a book or list the most common words in a long text. Polish came first at 64K and 128K tokens, and that one sentence became the headline.</p></div>
+  <div class="panel">
+    <div class="toggle" role="group" aria-label="Compare framings">
+      <button type="button" id="lens-media" aria-pressed="false">What the headlines said</button>
+      <button type="button" id="lens-paper" aria-pressed="true">What the paper says</button>
+    </div>
+    <div class="lens" id="lens-media-body" hidden><ul><li>Polish is the best language for prompting and talking to chatbots.</li><li>AI “loves our grammar”, so we should use Polish more often.</li><li>Microsoft research proves Polish beats English.</li></ul></div>
+    <div class="lens" id="lens-paper-body"><ul><li>Task: find a number in a long novel (NIAH) or aggregate common words (CWE). Not prompting, reasoning or agents.</li><li>Polish first at 64K/128K with 88% averaged across 7 models; English 6th (83.9%); Chinese 4th from last (62.1%).</li><li>Each language uses a different book: <em>Little Women</em> (EN, 234K tokens), <em>Noce i dnie</em> vol. 3 (PL, 453K), <em>War and Peace</em> (RU, 1.1M).</li><li>The instruction language matters: with Korean context, switching instructions to English raises accuracy from 61% to 77% at 128K.</li><li>After controlling for content length, Slavic languages (RU, UK, PL) stay strong and English is “typically 8th” (Appendix D).</li></ul></div>
+  </div>
+  <div class="facts"><div class="fact"><span class="k">Models</span><span class="v">Gemini 1.5 Flash, o3-mini-high, Qwen2.5 7B/72B, Llama 3.1 8B, Llama 3.3 70B</span></div><div class="fact"><span class="k">o3-mini-high at 128K</span><span class="v">English 67% · Polish 92% · Ukrainian 89%</span></div><div class="fact"><span class="k">“None” option</span><span class="v">Adding “answer none if absent” cuts S-NIAH accuracy by 32% at 128K</span></div><div class="fact"><span class="k">Venue</span><span class="v">arXiv v3, 30 Sep 2025; COLM 2025 per secondary sources</span></div></div>
+  <p class="note">Co-author Marzena Karpińska: “we certainly cannot conclude on its basis that Polish is the best language for prompting.” (Science in Poland, 27 Nov 2025)</p>
+</section>
+
+<section id="agents">
+  <span class="eyebrow">02 · EU-24+, arXiv 2608.01395 · 2026</span>
+  <h2>Agent-style tasks in 2026: English first, Polish 7th of 30</h2>
+  <div class="prose"><p>The EU-24+ study (August 2026) ran 9 current models through 14 multi-turn dialogue games in 30 languages, with automatic scoring. It is the closest public test to an agent following a task over several turns. Pick a model to see where Polish lands.</p></div>
+  <div class="panel">
+    <div class="controls" id="eu-controls"><span class="lbl">Model</span></div>
+    <p class="summary" id="eu-summary"></p>
+    <div class="legend"><span><i style="background:var(--en)"></i>English</span><span><i style="background:var(--pl)"></i>Polish</span><span><i style="background:var(--slav)"></i>Other Slavic</span><span><i style="background:var(--other)"></i>Other languages</span></div>
+    <div class="chart" id="eu-chart"></div>
+    <p class="src">Source: <a href="https://arxiv.org/abs/2608.01395">Hakimov et al., “Language Equality has a Price”, arXiv 2608.01395, Table 4</a>. Clemscore = % games played × quality.</p>
+  </div>
+</section>
+
+<section id="same">
+  <span class="eyebrow">03 · Paired comparisons</span>
+  <h2>Same model, same task: English vs Polish</h2>
+  <div class="prose"><p>Each row is one model scored on the same task in English and in Polish. A dot further right is better. The right column shows Polish minus English. Studies differ in how the two versions were made, so read the note under the chart.</p></div>
+  <div class="panel">
+    <div class="controls" id="db-controls"><span class="lbl">Study</span></div>
+    <p class="summary" id="db-summary"></p>
+    <div class="legend"><span><i style="background:var(--en)"></i>English</span><span><i style="background:var(--pl)"></i>Polish</span></div>
+    <div class="chart" id="db-chart"></div>
+    <p class="note" id="db-note"></p>
+    <p class="src" id="db-src"></p>
+  </div>
+</section>
+
+<section id="instructions">
+  <span class="eyebrow">04 · arXiv 2504.17720 · OneRuler §4</span>
+  <h2>The language of the instructions matters more than the language of the content</h2>
+  <div class="prose"><p>In an education study, the same Czech, Ukrainian or German content was given to six models twice: once with English task instructions, once with the instructions translated. With English instructions, every model stays near its English baseline. Translated instructions made some models collapse.</p></div>
+  <div class="panel">
+    <div class="controls" id="in-controls"><span class="lbl">Content language</span></div>
+    <div class="legend"><span><i style="background:var(--en)"></i>English instructions</span><span><i style="background:var(--pl)"></i>Translated instructions</span><span><i style="background:var(--ink);width:2px;border-radius:0"></i>All-English baseline</span></div>
+    <div class="chart" id="in-chart"></div>
+    <p class="note">The same pattern appears in OneRuler: with Korean context, switching the instructions to English raised accuracy from 61% to 77% at 128K tokens.</p>
+    <p class="src">Source: <a href="https://arxiv.org/abs/2504.17720">“Are LLMs for Education Reliable for All Languages?”, arXiv 2504.17720, Table 3 (misconception identification)</a>.</p>
+  </div>
+</section>
+
+<section id="reasoning">
+  <span class="eyebrow">05 · Reasoning and agents</span>
+  <h2>Reasoning models think best in English</h2>
+  <div class="prose"><p>Several 2025 studies forced reasoning models to think in the user's language, or let them think in English. Thinking in English scores higher. Agents also do worse and are easier to attack outside English.</p></div>
+  <div class="cards" id="reason-cards"></div>
+  <div class="panel">
+    <h3>Knowledge and reasoning in other Slavic languages (MMLU-ProX)</h3>
+    <div class="tablewrap"><table class="matrix mono" id="mmlu-table"></table></div>
+    <p class="src">Source: <a href="https://arxiv.org/abs/2503.10497">MMLU-ProX, arXiv 2503.10497, Table 3</a>. Polish is not among its 29 languages. Green = Slavic score ≥ English.</p>
+  </div>
+</section>
+
+<section id="tokens">
+  <span class="eyebrow">06 · arXiv 2604.10799 · 2605.24718</span>
+  <h2>Polish costs 1.3–1.8× more tokens for the same text</h2>
+  <div class="prose"><p>Tokenizers are trained mostly on English. The same Polish text is split into more pieces, so it costs more and fills the context window sooner. Polish-specific tokenizers such as APT4 reverse this.</p></div>
+  <div class="panel">
+    <h3>What would my prompt cost in Polish?</h3>
+    <div class="calc">
+      <label for="tk-en">Tokens of the English version<input id="tk-en" type="number" min="0" step="1000" value="200000"></label>
+      <label for="tk-price">Price, $ per 1M input tokens<input id="tk-price" type="number" min="0" step="0.25" value="3"></label>
+      <label for="tk-tok">Tokenizer<select id="tk-tok"></select></label>
+    </div>
+    <div class="out">
+      <div class="en"><span>English</span><b id="o-en"></b><span id="o-en-c"></span></div>
+      <div class="pl"><span>Polish</span><b id="o-pl"></b><span id="o-pl-c"></span></div>
+      <div><span>128K window holds</span><b id="o-ctx"></b><span>English-token equivalent of Polish text</span></div>
+    </div>
+    <p class="src">Ratios from the Polish Constitution preamble in PL and EN, <a href="https://arxiv.org/abs/2604.10799">Bielik v3 tokenizer report, Table 1</a>.</p>
+  </div>
+  <div class="panel">
+    <h3>Tokens per word across European languages</h3>
+    <div class="chart" id="fert-chart"></div>
+    <p class="src">Mean over 6 tokenizers (incl. GPT-4o, Llama, Qwen3, DeepSeek V3) on parallel SIB-200 text. <a href="https://arxiv.org/abs/2605.24718">Ovcharov 2026, Table 4</a> (single-author preprint).</p>
+  </div>
+</section>
+
+<section id="answer">
+  <span class="eyebrow">07 · Answer</span>
+  <h2>What the evidence says</h2>
+  <div class="panel tablewrap">
+    <table class="matrix">
+      <thead><tr><th>Area</th><th>Who does better</th><th>Evidence</th><th>Strength</th></tr></thead>
+      <tbody><tr><td><strong>Prompting in general</strong></td><td><span class="pill en">English or tie</span></td><td>The only pro-Polish result is one long-context retrieval benchmark (early-2025 models, no significance test).</td><td class='strength'>high</td></tr><tr><td><strong>Retrieval / RAG</strong></td><td><span class="pill en">English</span></td><td>MKQA RAG: English +8 to +22 points over Polish (small open models). RAG systems cite English evidence more often.</td><td class='strength'>medium</td></tr><tr><td><strong>Knowledge / reasoning</strong></td><td><span class="pill tie">Tie on frontier models</span></td><td>Medical exams, MMLU-ProX: frontier gap ≈0–3 points; small models lose 5–20 points in Polish.</td><td class='strength'>high</td></tr><tr><td><strong>Agents / multi-turn</strong></td><td><span class="pill en">English, slightly</span></td><td>EU-24+ 2026: English first of 30; Polish 7th, ≈2 points behind on GPT-5.4 and Opus 4.8.</td><td class='strength'>medium-high</td></tr><tr><td><strong>Polish-native content</strong></td><td><span class="pill tie">Mixed</span></td><td>PoVisLE 2026: translating Polish cultural questions into English helps 8 models and hurts 8.</td><td class='strength'>medium</td></tr><tr><td><strong>Same-document RAG, frontier models</strong></td><td><span class="pill na">No data</span></td><td>Not found after five search iterations.</td><td class='strength'>—</td></tr></tbody>
+    </table>
+  </div>
+  <h3>What to do in practice</h3>
+  <ol class="recs"><li>Write system prompts, tool descriptions and agent instructions in English. Keep Polish data and user messages in Polish, and ask for the answer in Polish.</li><li>Let reasoning models think in English. Do not force Polish chain-of-thought.</li><li>For RAG over Polish documents, keep the corpus in Polish and use embeddings tested on Polish (PL-MTEB). Evaluate with your own Polish questions.</li><li>Budget 1.3–1.8× more tokens for Polish text, both for cost and context size.</li><li>With small or open models, test a Polish model (Bielik, PLLuM) against a frontier model on your own task.</li><li>Measure on your own evaluation set. A 1–3 point benchmark gap is smaller than the spread between tasks.</li></ol>
+</section>
+
+<section id="method">
+  <span class="eyebrow">08 · Method</span>
+  <h2>How this was researched and checked</h2>
+  <ol class="steps"><li>Six Claude Haiku research agents searched in parallel: original source, reasoning, retrieval/RAG, native Slavic sources, prompt language and agents, critiques.</li><li>Second iteration: Polish reasoning, retrieval, and native-language searches in Polish, Czech, Slovak, Ukrainian, Russian, Bulgarian, Croatian, Serbian and Slovenian.</li><li>Iterations 3–5 targeted the remaining gap (Polish RAG and long context), including Polish-language and parallel-benchmark sources.</li><li>Five separate verification agents re-checked claims. The coordinator (Claude Opus) then re-read every charted number from the paper's arXiv HTML table.</li></ol>
+  <p class="note">Verification caught four errors before publication: a reversed “none option” effect, a misread Czech study (the drop came from translating instructions, not content), an unconfirmed MERA Code claim, and several numbers that came only from search snippets.</p>
+  <h3>Primary sources (✓ = table checked in source)</h3>
+  <ul class="sources"><li><a href="https://arxiv.org/abs/2503.01996">OneRuler (Kim et al., 2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2608.01395">EU-24+ multi-turn games (Hakimov et al., 2026)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2412.00559">Polish–English medical exams (Grzybowski et al., EMNLP Findings 2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2608.07763">PoVisLE (Kołos et al., 2026)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2504.00597">Multilingual context use in RAG / MKQA (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2509.04111">MultiWikiQA (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2509.13930">Linguistic Nepotism in multilingual RAG (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2503.10497">MMLU-ProX (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2506.04079">EuroLLM-9B report (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2505.22888">Thinking-language control (Qi et al., EMNLP Findings 2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2504.18428">PolyMath (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2505.17407">Language Matters: reasoning paths (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2505.15935">MAPS multilingual agents (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2504.17720">LLMs in education across languages (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2502.15603">Do multilingual LLMs think in English? (2025)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2604.10799">Bielik v3 tokenizer report (2026)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2605.24718">The Tokenizer Tax (2026)</a> <span class="badge">✓</span></li><li><a href="https://arxiv.org/abs/2412.10893">BgGPT 1.0, Bulgarian vs English (2024)</a> <span class="badge">✓</span></li></ul>
+  <footer>Popular articles and social media were used only to locate sources. Data extracts: <span class='mono'>docs/research/polish-vs-english-llms/data/</span>.</footer>
+</section>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const LANG="en";
+const S={"langs": {"ar": "Arabic", "bg": "Bulgarian", "cs": "Czech", "da": "Danish", "de": "German", "el": "Greek", "en": "English", "es": "Spanish", "et": "Estonian", "fi": "Finnish", "fr": "French", "ga": "Irish", "hr": "Croatian", "hu": "Hungarian", "it": "Italian", "lt": "Lithuanian", "lv": "Latvian", "mt": "Maltese", "nl": "Dutch", "pl": "Polish", "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak", "sl": "Slovenian", "sr": "Serbian", "sv": "Swedish", "tr": "Turkish", "uk": "Ukrainian", "zh": "Chinese"}, "fert_names": {"English": "English", "Spanish": "Spanish", "French": "French", "Italian": "Italian", "German": "German", "Polish": "Polish", "Czech": "Czech", "Slovenian": "Slovenian", "Croatian": "Croatian", "Bulgarian": "Bulgarian", "Slovak": "Slovak", "Ukrainian": "Ukrainian", "Hungarian": "Hungarian", "Finnish": "Finnish", "Greek": "Greek"}, "en_name": "English", "pl_name": "Polish", "model": "Model", "avg9": "Average of 9 models", "rank": "Rank", "vs_en": "vs English", "eu_aria": "Bar chart of clemscore by language for the selected model", "eu_sum": "{m}: Polish ranks {rp}, English {re}. Polish minus English: {d} points.", "db_aria": "Dumbbell chart comparing English and Polish scores per model", "db_sum": "Polish is higher for {w} models. Median Polish minus English: {med} points.", "in_aria": "Paired bars comparing English and translated instructions per model", "in_langs": {"cs": "Czech", "uk": "Ukrainian", "de": "German"}, "s4_leg_en": "English instructions", "s4_leg_tr": "Translated instructions", "s4_leg_base": "All-English baseline", "fert_aria": "Tokens per word by language", "studies": {"eu": {"name": "Multi-turn games 2026", "note": "30-language dialogue games, models from 2026. Each language version is generated from the same game templates.", "src": "<a href=\"https://arxiv.org/abs/2608.01395\">Hakimov et al. 2026, Table 4</a>"}, "med": {"name": "Medical exams", "note": "Same Polish licensing-exam questions; English versions are official expert translations. Closed-book knowledge and reasoning.", "src": "<a href=\"https://arxiv.org/abs/2412.00559\">Grzybowski et al., Findings EMNLP 2025, Table 4 (LEK)</a>"}, "pov": {"name": "Polish culture VQA 2026", "note": "Questions written in Polish about Polish culture, then translated to English. Here “EN” is the translation, so Polish has the home advantage.", "src": "<a href=\"https://arxiv.org/abs/2608.07763\">Kołos et al. 2026, Table 14</a>"}, "mkqa": {"name": "RAG (MKQA)", "note": "Parallel questions; the model gets the relevant passage in the question's language. Strict lexical match may penalise inflected Polish answers.", "src": "<a href=\"https://arxiv.org/abs/2504.00597\">arXiv 2504.00597 v4, Table 15 (MKQA, gold passage in query language)</a>"}, "mmlu": {"name": "MMLU (translated)", "note": "Polish MMLU is a machine translation of the English test, so the gap mixes language and translation quality.", "src": "<a href=\"https://arxiv.org/abs/2506.04079\">EuroLLM-9B report, Tables 15 & 35 (MMLU 5-shot)</a>"}, "mwqa": {"name": "Reading QA (Wikipedia)", "note": "Each language uses its own Wikipedia articles, so content is not parallel.", "src": "<a href=\"https://arxiv.org/abs/2509.04111\">MultiWikiQA, Tables 4–6 (F1)</a>"}}, "reason": [{"t": "Forcing thinking in the user's language (AIME)", "rows": [["14B · free", 27.2, "var(--en)"], ["14B · forced", 14.4, "var(--pl)"], ["32B · free", 44.8, "var(--en)"], ["32B · forced", 29.6, "var(--pl)"]], "s": "R1-Distill-Qwen-14B and Skywork-OR1-32B, average over 11 languages. Qi et al., arXiv 2505.22888, Table 1."}, {"t": "Which language should the model reason in? (PolyMath, 18 languages)", "rows": [["Query language", 43.4, "var(--pl)"], ["No control", 45.9, "var(--other)"], ["English", 47.9, "var(--en)"]], "s": "QwQ-32B average when the prompt tells it which language to use. Query language was lowest for all 3 models (also DeepSeek-R1 and Claude 3.7 Sonnet). arXiv 2504.18428, Table 7."}, {"t": "Agents outside English (MAPS)", "rows": [["GAIA · EN", 47.4, "var(--en)"], ["GAIA · non-EN", 35.8, "var(--pl)"], ["Attack success · EN", 32.7, "var(--en)"], ["Attack success · non-EN", 47.3, "var(--pl)"]], "s": "Task success drops and attacks succeed more often in 11 non-English languages (incl. Russian). arXiv 2505.15935."}]};
+document.documentElement.lang=LANG;
+const loc=LANG==="pl"?"pl-PL":"en-US";
+const f1=v=>new Intl.NumberFormat(loc,{minimumFractionDigits:1,maximumFractionDigits:1}).format(v);
+const f2=v=>new Intl.NumberFormat(loc,{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+const f0=v=>new Intl.NumberFormat(loc,{maximumFractionDigits:0}).format(v);
+const sgn=v=>(v>0?"+":v<0?"−":"±")+f1(Math.abs(v));
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e}
+const tip=document.getElementById("tip");
+function showTip(ev,html){tip.innerHTML=html;tip.style.opacity=1;const r=tip.getBoundingClientRect();let x=ev.clientX+14,y=ev.clientY+14;if(x+r.width>innerWidth-8)x=ev.clientX-r.width-14;if(y+r.height>innerHeight-8)y=ev.clientY-r.height-14;tip.style.left=x+"px";tip.style.top=y+"px"}
+function hideTip(){tip.style.opacity=0}
+function chips(container,items,cur,onPick){const c=document.getElementById(container);c.querySelectorAll(".chip").forEach(b=>b.remove());items.forEach(([k,label])=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=label;b.setAttribute("aria-pressed",k===cur);b.addEventListener("click",()=>{c.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");onPick(k)});c.appendChild(b)})}
+const store={get(k,d){try{return localStorage.getItem(k)??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- 01 lens toggle ---------- */
+const lm=document.getElementById("lens-media"),lp=document.getElementById("lens-paper");
+function lens(which){lm.setAttribute("aria-pressed",which==="media");lp.setAttribute("aria-pressed",which==="paper");document.getElementById("lens-media-body").hidden=which!=="media";document.getElementById("lens-paper-body").hidden=which!=="paper"}
+lm.onclick=()=>lens("media");lp.onclick=()=>lens("paper");
+
+/* ---------- 02 EU-24+ ---------- */
+const EU_M=["GPT-5.4","Opus-4.8","GLM-5.2","DS-V4","Nemotron","Gemma4","Qwen3.6","Mistral-L3","Apertus","Avg"];
+const EU={ar:[79.1,69.1,60.2,52.1,47.1,49.9,34.7,39.3,11.8,49.3],bg:[92.4,80.6,68.9,61.2,52.3,60.8,52.4,41.7,17.6,58.7],cs:[90.6,81.7,60.1,58.6,55.7,52.8,50.4,41.8,14.1,56.2],da:[89.9,83.0,68.5,65.0,58.5,59.2,47.4,44.8,11.3,58.6],de:[90.7,85.5,67.3,70.1,63.0,57.9,42.5,49.4,16.2,60.3],el:[91.4,75.5,69.9,63.1,51.3,47.6,54.9,34.7,19.1,56.4],en:[91.8,84.4,65.6,64.8,68.2,50.6,55.6,54.6,21.4,61.9],es:[85.2,70.0,62.0,57.8,56.2,52.9,44.4,45.1,17.0,54.5],et:[92.3,81.8,65.5,58.1,39.8,41.4,46.8,31.5,8.2,51.7],fi:[93.6,79.6,61.1,61.6,54.8,50.6,42.4,43.4,18.6,56.2],fr:[92.3,83.5,67.4,52.4,58.0,52.9,53.9,45.8,20.3,58.5],ga:[84.9,76.3,40.5,37.8,30.4,16.9,32.4,19.3,6.9,38.4],hr:[93.0,83.7,64.2,56.4,53.2,55.2,46.0,42.1,18.7,56.9],hu:[81.1,78.3,63.4,52.6,46.2,49.6,40.0,40.1,17.6,52.1],it:[93.9,80.9,66.8,65.7,61.0,59.6,46.8,37.1,14.6,58.5],lt:[77.9,74.1,59.5,40.3,46.2,37.0,42.4,25.7,16.2,46.6],lv:[91.8,79.9,61.9,59.5,45.4,49.0,50.2,32.7,14.3,53.9],mt:[92.0,75.6,45.4,64.3,32.7,34.2,40.1,12.3,2.3,44.3],nl:[90.7,83.5,66.8,63.9,62.7,60.2,49.5,54.3,15.0,60.7],pl:[89.5,82.3,64.3,62.5,57.1,59.7,45.9,49.6,22.0,59.2],pt:[85.9,71.2,56.1,53.5,58.1,55.9,49.3,41.8,19.0,54.5],ro:[74.1,73.0,61.9,50.3,53.9,43.0,45.7,36.0,17.8,50.6],ru:[89.3,80.1,62.3,62.5,59.0,58.0,53.8,46.8,23.0,59.4],sk:[90.3,82.1,59.4,59.3,45.5,53.6,48.6,38.5,12.9,54.5],sl:[86.1,78.7,59.8,55.1,53.4,36.6,48.8,43.9,18.8,53.5],sr:[90.6,84.6,60.7,58.7,48.6,60.2,42.7,37.0,19.6,55.8],sv:[87.8,80.6,65.2,65.5,61.2,56.8,45.9,51.3,20.5,59.4],tr:[91.0,75.0,63.3,63.5,51.4,42.0,41.4,33.2,9.4,52.3],uk:[93.0,79.6,67.0,55.7,50.4,56.7,50.0,50.4,17.7,57.8],zh:[91.3,73.9,71.3,62.8,68.4,49.0,61.7,50.7,18.0,60.8]};
+const SLAV=new Set(["cs","sk","sl","hr","bg","ru","uk","sr"]);
+const color=k=>k==="en"?"var(--en)":k==="pl"?"var(--pl)":SLAV.has(k)?"var(--slav)":"var(--other)";
+let euModel=store.get("eu-model","Avg"); if(!EU_M.includes(euModel)) euModel="Avg";
+function drawEU(){
+  const box=document.getElementById("eu-chart");box.innerHTML="";
+  const mi=EU_M.indexOf(euModel);
+  const rows=Object.keys(EU).map(k=>({k,v:EU[k][mi]})).sort((a,b)=>b.v-a.v);
+  const W=Math.max(320,box.clientWidth),lw=W<520?92:128,vw=42,rh=21,top=22,H=top+rows.length*rh+6;
+  const x=v=>lw+(v/100)*(W-lw-vw);
+  const svg=el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":S.eu_aria},box);
+  [0,25,50,75,100].forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:top-4,y2:H-4,class:"grid"},svg);el("text",{x:x(t),y:12,"text-anchor":"middle",class:"axis"},svg,t)});
+  rows.forEach((r,i)=>{
+    const y=top+i*rh, hl=r.k==="en"||r.k==="pl";
+    const g=el("g",{},svg);
+    el("text",{x:lw-8,y:y+rh/2+4,"text-anchor":"end","font-size":hl?13:12,"font-weight":hl?700:400,style:hl?"fill:var(--ink)":""},g,S.langs[r.k]);
+    el("rect",{x:x(0),y:y+3,width:Math.max(1,x(r.v)-x(0)),height:rh-6,rx:3,fill:color(r.k)},g);
+    el("text",{x:x(r.v)+5,y:y+rh/2+4,class:"val","font-weight":hl?600:400},g,f1(r.v));
+    const hit=el("rect",{x:0,y,width:W,height:rh,fill:"transparent"},g);
+    const rank=i+1, d=r.v-EU.en[mi];
+    hit.addEventListener("mousemove",e=>showTip(e,`<strong>${S.langs[r.k]}</strong><br>${euModel==="Avg"?S.avg9:euModel}: <b>${f1(r.v)}</b><br>${S.rank} ${rank}/30 · ${S.vs_en} <b>${r.k==="en"?"—":sgn(d)}</b>`));
+    hit.addEventListener("mouseleave",hideTip);
+  });
+  const rp=rows.findIndex(r=>r.k==="pl")+1, re=rows.findIndex(r=>r.k==="en")+1, d=EU.pl[mi]-EU.en[mi];
+  document.getElementById("eu-summary").innerHTML=S.eu_sum.replace("{m}",euModel==="Avg"?S.avg9:euModel).replace("{rp}",`<span class="mono">${rp}/30</span>`).replace("{re}",`<span class="mono">${re}/30</span>`).replace("{d}",`<span class="mono">${sgn(d)}</span>`);
+}
+chips("eu-controls",EU_M.map(m=>[m,m==="Avg"?S.avg9:m]),euModel,k=>{euModel=k;store.set("eu-model",k);drawEU()});
+
+/* ---------- 03 dumbbells ---------- */
+const STUDIES={
+ eu:{rows:EU_M.slice(0,9).map((m,i)=>[m,EU.en[i],EU.pl[i]]),dom:[0,100]},
+ med:{rows:[["GPT-4o (2024-08)",88.69,89.96],["gpt-4o-mini",75.92,75.88],["Llama-3.1-70B",82.60,80.94],["Llama-3.1-8B",64.69,51.25],["Llama-3.2-3B",52.08,39.22],["Qwen2.5-72B",81.93,76.87],["Qwen2.5-7B",67.73,51.92],["Mistral-Large-2407",82.40,76.75],["Mistral-Small-2409",63.70,51.72],["Bielik-11B-v2.2",56.98,62.36],["Meditron3-70B",66.75,68.37],["Meditron3-8B",60.34,45.99],["OpenBioLLM-70B",65.92,61.33],["JSL-MedLlama-3-8B",54.09,35.98],["medllama3-v20",52.27,40.93],["BioMistral-7B",32.74,26.26]],dom:[20,100]},
+ pov:{rows:[["Qwen3.5-397B (Thinking)",68.12,75.16],["Gemma-4-31B (Thinking)",72.02,72.51],["Claude Sonnet 5",66.94,69.94],["GPT-5.4",70.40,68.35],["Gemma-4-31B",60.15,63.96],["Qwen3.5-397B",60.56,61.89],["GLM-4.6V",56.31,61.72],["Qwen3.5-27B (Thinking)",58.35,56.65],["Qwen3.5-27B",51.84,50.83],["Qwen3.5-9B (Thinking)",51.77,49.54],["LLaVA-Bielik-11B",39.02,40.44],["InternVL3.5-38B",41.66,39.88],["Ministral-3-14B",41.65,39.54],["Qwen3.5-9B",47.04,38.75],["Ministral-3-14B (Thinking)",39.06,36.08],["LLaVA-PLLuM-12B",32.90,34.80]],dom:[20,90]},
+ mkqa:{rows:[["Aya-Expanse-8B",87.5,79.2],["Gemma-2-9B-it",79.8,67.8],["Qwen2.5-7B-Instruct",86.0,68.9],["Llama-3.2-3B-Instruct",82.4,60.6]],dom:[40,100]},
+ mmlu:{rows:[["Gemma-2-9B-IT",71.87,65.11],["Llama-3.1-8B-IT",68.25,57.67],["Qwen-2.5-7B-IT",73.41,63.91],["Aya-Expanse-8B",62.01,54.69],["Mistral-7B-IT",60.67,50.06],["Salamandra-7B-IT",52.54,47.24],["EuroLLM-9B-IT",58.36,55.54]],dom:[40,80]},
+ mwqa:{rows:[["Mistral-Small-3.1 Base",79.5,69.6],["Mistral-Small-3.1 Instruct",78.5,64.7],["Llama-3.1-8B Base",76.4,58.1],["Llama-3.1-8B Instruct",71.4,55.8]],dom:[40,90]}
+};
+let study=store.get("db-study","eu"); if(!STUDIES[study]) study="eu";
+function drawDB(){
+  const box=document.getElementById("db-chart");box.innerHTML="";
+  const st=STUDIES[study], rows=st.rows.map(([m,en,pl])=>({m,en,pl,d:pl-en})).sort((a,b)=>b.d-a.d);
+  const W=Math.max(320,box.clientWidth),lw=W<520?128:190,rw=52,rh=26,top=22,H=top+rows.length*rh+6;
+  const [a,b]=st.dom,x=v=>lw+((v-a)/(b-a))*(W-lw-rw-10);
+  const svg=el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":S.db_aria},box);
+  const step=(b-a)>50?20:10;for(let t=a;t<=b;t+=step){el("line",{x1:x(t),x2:x(t),y1:top-4,y2:H-4,class:"grid"},svg);el("text",{x:x(t),y:12,"text-anchor":"middle",class:"axis"},svg,t)}
+  el("text",{x:W-4,y:12,"text-anchor":"end",class:"axis"},svg,"PL−EN");
+  rows.forEach((r,i)=>{
+    const y=top+i*rh+rh/2,g=el("g",{},svg);
+    el("text",{x:lw-10,y:y+4,"text-anchor":"end","font-size":W<520?11:12.5},g,r.m);
+    el("line",{x1:x(r.en),x2:x(r.pl),y1:y,y2:y,stroke:"var(--muted)","stroke-width":2,"stroke-opacity":.55},g);
+    el("circle",{cx:x(r.en),cy:y,r:5.5,fill:"var(--en)",stroke:"var(--surface)","stroke-width":2},g);
+    el("circle",{cx:x(r.pl),cy:y,r:5.5,fill:"var(--pl)",stroke:"var(--surface)","stroke-width":2},g);
+    el("text",{x:W-4,y:y+4,"text-anchor":"end",class:"val","font-weight":600,style:r.d>0?"fill:var(--pl)":"fill:var(--en)"},g,sgn(r.d));
+    const hit=el("rect",{x:0,y:y-rh/2,width:W,height:rh,fill:"transparent"},g);
+    hit.addEventListener("mousemove",e=>showTip(e,`<strong>${r.m}</strong><br>${S.en_name}: <b>${f2(r.en)}</b><br>${S.pl_name}: <b>${f2(r.pl)}</b><br>PL−EN: <b>${sgn(r.d)}</b>`));
+    hit.addEventListener("mouseleave",hideTip);
+  });
+  const n=rows.length,w=rows.filter(r=>r.d>0).length,ds=rows.map(r=>r.d).sort((p,q)=>p-q),med=n%2?ds[(n-1)/2]:(ds[n/2-1]+ds[n/2])/2;
+  document.getElementById("db-summary").innerHTML=S.db_sum.replace("{w}",`<span class="mono">${w}/${n}</span>`).replace("{med}",`<span class="mono">${sgn(med)}</span>`);
+  document.getElementById("db-note").textContent=S.studies[study].note;
+  document.getElementById("db-src").innerHTML=S.studies[study].src;
+}
+chips("db-controls",Object.keys(STUDIES).map(k=>[k,S.studies[k].name]),study,k=>{study=k;store.set("db-study",k);drawDB()});
+
+/* ---------- 04 instruction language ---------- */
+const IN_M=["GPT-4o","Llama","Claude","Gemini","Mistral","Command-A"];
+const IN_BASE=[97.6,96.2,95.1,94.0,95.0,95.3];
+const IN={cs:{en:[96.9,95.1,94.5,92.3,94.5,94.1],tr:[96.6,95.8,70.2,81.6,41.0,94.5]},uk:{en:[95.7,94.9,92.9,93.3,94.4,94.9],tr:[95.6,94.3,56.6,90.4,94.2,93.9]},de:{en:[96.0,96.2,94.6,84.6,95.1,95.2],tr:[95.9,96.6,94.0,74.0,94.9,95.2]}};
+let inLang="cs";
+function drawIN(){
+  const box=document.getElementById("in-chart");box.innerHTML="";
+  const W=Math.max(320,box.clientWidth),lw=W<520?84:110,vw=44,gh=46,top=22,H=top+IN_M.length*gh+4;
+  const x=v=>lw+(v/100)*(W-lw-vw);
+  const svg=el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":S.in_aria},box);
+  [0,25,50,75,100].forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:top-4,y2:H-4,class:"grid"},svg);el("text",{x:x(t),y:12,"text-anchor":"middle",class:"axis"},svg,t)});
+  IN_M.forEach((m,i)=>{
+    const y=top+i*gh,g=el("g",{},svg),e=IN[inLang].en[i],t=IN[inLang].tr[i],bse=IN_BASE[i];
+    el("text",{x:lw-8,y:y+gh/2+3,"text-anchor":"end","font-size":12.5,"font-weight":600,style:"fill:var(--ink)"},g,m);
+    el("rect",{x:x(0),y:y+5,width:x(e)-x(0),height:15,rx:3,fill:"var(--en)"},g);
+    el("rect",{x:x(0),y:y+22,width:x(t)-x(0),height:15,rx:3,fill:"var(--pl)"},g);
+    el("line",{x1:x(bse),x2:x(bse),y1:y+2,y2:y+40,stroke:"var(--ink)","stroke-width":2},g);
+    el("text",{x:x(e)+5,y:y+16,class:"val"},g,f1(e));
+    el("text",{x:x(t)+5,y:y+33,class:"val","font-weight":t<bse-10?700:400,style:t<bse-10?"fill:var(--bad)":""},g,f1(t));
+    const hit=el("rect",{x:0,y,width:W,height:gh,fill:"transparent"},g);
+    hit.addEventListener("mousemove",ev=>showTip(ev,`<strong>${m} · ${S.in_langs[inLang]}</strong><br>${S.s4_leg_base}: <b>${f1(bse)}</b><br>${S.s4_leg_en}: <b>${f1(e)}</b><br>${S.s4_leg_tr}: <b>${f1(t)}</b>`));
+    hit.addEventListener("mouseleave",hideTip);
+  });
+}
+chips("in-controls",Object.keys(IN).map(k=>[k,S.in_langs[k]]),inLang,k=>{inLang=k;drawIN()});
+
+/* ---------- 05 reasoning cards + MMLU-ProX ---------- */
+(function(){
+  const box=document.getElementById("reason-cards");
+  S.reason.forEach(c=>{
+    const d=document.createElement("div");d.className="card";
+    const mx=Math.max(...c.rows.map(r=>r[1]));
+    d.innerHTML=`<div class="t">${c.t}</div><div class="mini">${c.rows.map(r=>`<div class="row"><span>${r[0]}</span><div class="bar" style="width:${(r[1]/mx*100).toFixed(1)}%;background:${r[2]}"></div><span class="num">${f1(r[1])}</span></div>`).join("")}</div><div class="s">${c.s}</div>`;
+    box.appendChild(d);
+  });
+  const M=["Qwen3-235B-Think","DeepSeek-R1","GPT-4.1","o4-mini","Llama3.3-70B"];
+  const D={EN:[80.7,79.5,79.8,73.7,65.7],CS:[80.5,76.8,77.5,73.5,63.8],RU:[77.0,76.4,71.2,62.0,61.1],UK:[78.8,76.8,76.4,73.3,59.9],SR:[80.2,80.9,76.9,72.6,63.0]};
+  const t=document.getElementById("mmlu-table");
+  let h=`<thead><tr><th>${S.model}</th>${Object.keys(D).map(k=>`<th>${k}</th>`).join("")}</tr></thead><tbody>`;
+  M.forEach((m,i)=>{h+=`<tr><td>${m}</td>`+Object.keys(D).map(k=>{const v=D[k][i],dd=v-D.EN[i];const st=k==="EN"?"font-weight:600;color:var(--en)":dd>=0?"font-weight:600;color:var(--slav)":"";return `<td style="${st}">${f1(v)}${k==="EN"?"":`<br><span class="strength">${sgn(dd)}</span>`}</td>`}).join("")+`</tr>`});
+  t.innerHTML=h+"</tbody>";
+})();
+
+/* ---------- 06 tokens ---------- */
+const TOK=[["Llama 3.2 / SmolLM3",653,371],["Qwen3",625,373],["Mistral Small 3.1 / Apertus",547,377],["Gemma 3",510,383],["EuroLLM",437,404],["Mistral v0.1 / Bielik v3 (orig.)",747,408],["APT4 (Polish)",375,631]];
+const sel=document.getElementById("tk-tok");TOK.forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=`${t[0]} — ×${f2(t[1]/t[2])}`;sel.appendChild(o)});sel.value=store.get("tk-tok","1");
+function calc(){
+  const n=Math.max(0,+document.getElementById("tk-en").value||0),p=Math.max(0,+document.getElementById("tk-price").value||0),t=TOK[+sel.value]||TOK[1],r=t[1]/t[2],pl=n*r;
+  document.getElementById("o-en").textContent=f0(n);document.getElementById("o-pl").textContent=f0(pl);
+  document.getElementById("o-en-c").textContent=`$${f2(n/1e6*p)}`;document.getElementById("o-pl-c").textContent=`$${f2(pl/1e6*p)} (${r>=1?"+":"−"}${f0(Math.abs(r-1)*100)}%)`;
+  document.getElementById("o-ctx").textContent=`${f0(128000/r/1000)}K`;
+}
+["tk-en","tk-price"].forEach(id=>document.getElementById(id).addEventListener("input",calc));sel.addEventListener("change",()=>{store.set("tk-tok",sel.value);calc()});
+const FERT=[["English",1.23],["Spanish",1.46],["French",1.52],["Italian",1.67],["German",1.76],["Polish",2.25],["Czech",2.28],["Slovenian",2.28],["Croatian",2.31],["Bulgarian",2.33],["Slovak",2.45],["Ukrainian",2.66],["Hungarian",2.71],["Finnish",2.99],["Greek",3.09]];
+const FK={English:"en",Polish:"pl",Czech:"cs",Slovenian:"sl",Croatian:"hr",Bulgarian:"bg",Slovak:"sk",Ukrainian:"uk"};
+function drawFert(){
+  const box=document.getElementById("fert-chart");box.innerHTML="";
+  const W=Math.max(320,box.clientWidth),lw=W<520?84:110,vw=40,rh=21,top=22,H=top+FERT.length*rh+4,x=v=>lw+(v/3.2)*(W-lw-vw);
+  const svg=el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":S.fert_aria},box);
+  [0,1,2,3].forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:top-4,y2:H-4,class:"grid"},svg);el("text",{x:x(t),y:12,"text-anchor":"middle",class:"axis"},svg,t)});
+  FERT.forEach(([n,v],i)=>{const y=top+i*rh,k=FK[n]||"x",hl=k==="en"||k==="pl";
+    el("text",{x:lw-8,y:y+rh/2+4,"text-anchor":"end","font-size":12,"font-weight":hl?700:400,style:hl?"fill:var(--ink)":""},svg,S.fert_names[n]);
+    el("rect",{x:x(0),y:y+3,width:x(v)-x(0),height:rh-6,rx:3,fill:color(k)},svg);
+    el("text",{x:x(v)+5,y:y+rh/2+4,class:"val"},svg,f2(v));});
+}
+
+function drawAll(){drawEU();drawDB();drawIN();drawFert()}
+drawAll();calc();
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawAll,120)});
+</script>
