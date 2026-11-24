@@ -9,9 +9,15 @@ build/
 !.env.example
 secrets
 .DS_Store
-# Project skills in .agents/skills/ and skills-lock.json are committed: skills built
-# in class must reach the repository. .claude/skills/ holds the CLI's links to them.
+# Agent Skills: skills-lock.json is committed as the source of truth (source repo and
+# commit for each installed skill); restore them with `npx skills install`.
+# Installed copies in .agents/skills/ are ignored. Skills written in this repo have no
+# remote source, so each one is un-ignored explicitly below.
+# .claude/skills/ holds the CLI's links to them; .claude/worktrees/ holds agent worktrees.
+.agents/skills/*
+!.agents/skills/deep-source-research/
 .claude/skills/
+.claude/worktrees/
 __pycache__/
 *.pyc
 .playwright-cli
