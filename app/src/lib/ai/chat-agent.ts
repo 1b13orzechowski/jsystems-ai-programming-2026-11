@@ -2,6 +2,7 @@ import "server-only";
 
 import { convertToModelMessages, isStepCount, safeValidateUIMessages, streamText } from "ai";
 
+import { applyGuardrails } from "@/lib/domain/guardrails";
 import { buildChatInstructions } from "@/lib/ai/prompts/chat";
 import { loadPolicy } from "@/lib/ai/policies";
 import { type ModelSet, OPENROUTER_PROVIDER_OPTIONS } from "@/lib/ai/models";
@@ -79,9 +80,51 @@ export async function prepareChatMessages(
   return { ok: true, messages: kept };
 }
 
-/** The decision the customer sees now: the latest issued decision in history that parses, else the token decision. */
-export function currentDecision(payload: CaseTokenPayload, messages: ChatUIMessage[]): Decision {
-  for (const message of [...messages].reverse()) {
+/**
+ * Never trusts a client-supplied tool output (AC-36, ADR-000 D-04). Every historical issueUpdatedDecision part with an
+ * output gets its output recomputed on the server from the part's input through the guardrails; a part whose input
+ * does not parse is dropped, and so is a message left without parts.
+ */
+export function recomputeToolOutputs(
+  payload: CaseTokenPayload,
+  messages: ChatUIMessage[],
+  ruleIds: ReadonlySet<string>,
+): ChatUIMessage[] {
+  const result: ChatUIMessage[] = [];
+  for (const message of messages) {
+    const parts: ChatUIMessage["parts"] = [];
+    for (const part of message.parts) {
+      if (part.type === TOOL_PART && part.state === "output-available") {
+        const parsed = UpdatedDecisionInputSchema.safeParse(part.input);
+        if (!parsed.success) continue;
+        const output = applyGuardrails({
+          draft: parsed.data,
+          analysis: payload.analysis,
+          window: payload.window,
+          ruleIds,
+          caseType: payload.input.caseType,
+          kind: "updated",
+        });
+        parts.push({ ...part, output });
+      } else {
+        parts.push(part);
+      }
+    }
+    if (parts.length > 0) result.push({ ...message, parts });
+  }
+  return result;
+}
+
+/**
+ * The decision the customer sees now: the latest issued decision in history, recomputed server-side from the tool
+ * input (never the client's output), else the token decision.
+ */
+export function currentDecision(
+  payload: CaseTokenPayload,
+  messages: ChatUIMessage[],
+  ruleIds: ReadonlySet<string>,
+): Decision {
+  for (const message of [...recomputeToolOutputs(payload, messages, ruleIds)].reverse()) {
     for (const part of [...message.parts].reverse()) {
       if (part.type === TOOL_PART && part.state === "output-available") {
         const parsed = DecisionSchema.safeParse(part.output);
@@ -100,15 +143,16 @@ export async function createChatStream(args: {
 }) {
   const { payload, messages, models, signal } = args;
   const policy = loadPolicy(payload.input.caseType);
+  const trusted = recomputeToolOutputs(payload, messages, policy.ruleIds);
 
   return streamText({
     model: models.chat,
     instructions: buildChatInstructions({
       payload,
-      currentDecision: currentDecision(payload, messages),
+      currentDecision: currentDecision(payload, trusted, policy.ruleIds),
       policy,
     }),
-    messages: await convertToModelMessages(messages),
+    messages: await convertToModelMessages(trusted),
     tools: {
       issueUpdatedDecision: createIssueUpdatedDecisionTool({ payload, ruleIds: policy.ruleIds }),
     },
