@@ -40,6 +40,8 @@ export async function fillCase(page: Page, input: CaseInput): Promise<void> {
   }
   if (input.photo !== undefined) {
     await page.getByTestId("photo-input").setInputFiles(photoPath(input.photo));
+    // Like a person, wait until the photo is prepared (client downscaling) and its thumbnail is shown.
+    await expect(page.getByRole("img", { name: COPY.form.photoThumbnailAlt })).toBeVisible({ timeout: 30_000 });
   }
 }
 

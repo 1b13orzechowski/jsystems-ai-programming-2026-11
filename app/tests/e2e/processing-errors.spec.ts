@@ -21,7 +21,8 @@ async function fillValidReturn(page: Page): Promise<void> {
 
 /** AC-13: after a failed case the banner is shown and every value and the photo are still there. */
 async function expectErrorBannerWithValuesKept(page: Page): Promise<void> {
-  const banner = page.getByRole("alert");
+  // The Next.js route announcer is also role="alert"; select the AC-13 banner by its text.
+  const banner = page.getByRole("alert").filter({ hasText: COPY.errorBanner.message });
   await expect(banner).toContainText(COPY.errorBanner.message, { timeout: 90_000 });
   await expect(banner.getByRole("button", { name: COPY.errorBanner.retry, exact: true })).toBeVisible();
 
@@ -61,7 +62,7 @@ test("AC-13 network: an offline submit shows the banner, then a retry on the pri
   await expectErrorBannerWithValuesKept(page);
 
   await context.setOffline(false);
-  await page.getByRole("alert").getByRole("button", { name: COPY.errorBanner.retry, exact: true }).click();
+  await page.getByRole("alert").filter({ hasText: COPY.errorBanner.message }).getByRole("button", { name: COPY.errorBanner.retry, exact: true }).click();
   await waitForChat(page);
   await expect(page.getByTestId("decision-card").first()).toBeVisible({ timeout: 90_000 });
 });

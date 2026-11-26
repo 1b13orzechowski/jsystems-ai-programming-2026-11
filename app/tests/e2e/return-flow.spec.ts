@@ -41,7 +41,10 @@ test("flow 4.1: return of a smartphone from form to decision card", async ({ pag
   await expect(summary).toContainText("Smartfon");
   await expect(summary).toContainText("Galaxy S30");
   await expect(summary).toContainText(toPolishDate(purchaseDate));
-  await expect(summary.getByRole("img", { name: COPY.form.photoThumbnailAlt })).toBeVisible();
+  // On narrow screens the summary details are collapsed behind a toggle (PRD 9.2); open them like a user.
+  const toggle = summary.getByRole("button", { name: COPY.summary.toggle });
+  if (await toggle.isVisible()) await toggle.click();
+  await expect(summary.getByRole("button", { name: COPY.summary.photoOpen }).locator("img")).toBeVisible();
 
   // AC-15: the first assistant message is the greeting and sits above the decision card.
   const firstAssistant = assistantMessages(page).first();
