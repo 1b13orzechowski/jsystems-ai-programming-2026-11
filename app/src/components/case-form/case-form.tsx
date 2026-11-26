@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 
 import { PhotoPicker } from "@/components/case-form/photo-picker";
 import type { CaseFormValues, CaseSubmission, SelectedPhoto } from "@/components/case-form/types";
@@ -27,6 +27,14 @@ function isFieldName(key: PropertyKey | undefined): key is FieldName {
 }
 
 /** Runs the shared Zod schema (AC-02…AC-06) and keeps the first message per field. */
+function currentToday(): string {
+  return todayInTimeZone(new Date(), APP_TIMEZONE);
+}
+
+function subscribeNever(): () => void {
+  return () => undefined;
+}
+
 function computeErrors(values: CaseFormValues, photo: SelectedPhoto | null, today: string): FieldErrors {
   const errors: FieldErrors = {};
   const parsed = createCaseInputSchema({ today }).safeParse(values);
@@ -61,7 +69,9 @@ export function CaseForm({ initialValues, initialPhoto, disabled, onSubmit }: Ca
   const [errors, setErrors] = useState<FieldErrors>({});
   const [focusRequest, setFocusRequest] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
-  const today = todayInTimeZone(new Date(), APP_TIMEZONE);
+  // "Today" is read at event time, never during render: Cache Components prerenders client components and
+  // rejects `new Date()` there. The date input's `max` comes from the browser only (undefined while prerendering).
+  const maxDate = useSyncExternalStore(subscribeNever, currentToday, () => undefined);
 
   // After a rejected submit, focus moves to the first invalid control in DOM (PRD 9.1) order.
   useEffect(() => {
@@ -84,16 +94,16 @@ export function CaseForm({ initialValues, initialPhoto, disabled, onSubmit }: Ca
   function setField(key: keyof CaseFormValues, value: string) {
     const next: CaseFormValues = { ...values, [key]: value };
     setValues(next);
-    refreshShown(computeErrors(next, photo, today));
+    refreshShown(computeErrors(next, photo, currentToday()));
   }
 
   function setPhotoValue(next: SelectedPhoto | null) {
     setPhoto(next);
-    refreshShown(computeErrors(values, next, today));
+    refreshShown(computeErrors(values, next, currentToday()));
   }
 
   function validateOnBlur(name: FieldName) {
-    const all = computeErrors(values, photo, today);
+    const all = computeErrors(values, photo, currentToday());
     setErrors((previous) => ({ ...previous, [name]: all[name] }));
   }
 
@@ -101,9 +111,9 @@ export function CaseForm({ initialValues, initialPhoto, disabled, onSubmit }: Ca
     event.preventDefault();
     if (disabled) return;
 
-    const all = computeErrors(values, photo, today);
+    const all = computeErrors(values, photo, currentToday());
     setErrors(all);
-    const parsed = createCaseInputSchema({ today }).safeParse(values);
+    const parsed = createCaseInputSchema({ today: currentToday() }).safeParse(values);
     if (hasAnyError(all) || !parsed.success || photo === null) {
       setFocusRequest((count) => count + 1);
       return;
@@ -188,7 +198,7 @@ export function CaseForm({ initialValues, initialPhoto, disabled, onSubmit }: Ca
           <Input
             id={idFor("purchaseDate")}
             type="date"
-            max={today}
+            max={maxDate}
             value={values.purchaseDate}
             onChange={(event) => setField("purchaseDate", event.target.value)}
             onBlur={() => validateOnBlur("purchaseDate")}
