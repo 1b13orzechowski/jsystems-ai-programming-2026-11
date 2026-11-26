@@ -14,7 +14,11 @@ npx next start -p 3000 >/dev/null 2>&1 &
 PRIMARY_PID=$!
 OPENROUTER_API_KEY=invalid-demo-key npx next start -p 3001 >/dev/null 2>&1 &
 FAILURE_PID=$!
-cleanup() { kill "$PRIMARY_PID" "$FAILURE_PID" 2>/dev/null || true; }
+# Stop the npx wrappers and the next-server processes they spawned (matched by process name, not command line).
+cleanup() {
+  kill "$PRIMARY_PID" "$FAILURE_PID" 2>/dev/null || true
+  ps -eo pid=,comm= | awk '$2 ~ /^next-serv/ {print $1}' | xargs -r kill 2>/dev/null || true
+}
 trap cleanup EXIT
 
 for port in 3000 3001; do

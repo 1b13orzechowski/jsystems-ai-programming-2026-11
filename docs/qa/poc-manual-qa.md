@@ -87,3 +87,22 @@ Each row: step, instance/URL, expected, observed. Images are in `docs/qa/screens
 | T17 | Greeting and the next sentence rendered on one line (single newline in markdown) | `Domain: put the greeting in its own paragraph in the first message` |
 | T17 build | `new Date()` during prerender of the form (Cache Components) broke `next build` | Read "today" in handlers; date `max` via `useSyncExternalStore` |
 | T18 | Chat composer was not a `<form>` | `Frontend: make the chat composer a form` |
+
+## Demo video (T21a)
+
+[`docs/qa/video/poc-demo.mp4`](video/poc-demo.mp4) — H.264, yuv420p, 1280×800, 30 fps, 2 min 17 s, 1.3 MB. Recorded on 2026-11-26 with `bash app/scripts/record-demo.sh`: ffmpeg 8.0.1 `x11grab` of the top-left 1280×800 of the X display while `app/scripts/demo-flow.ts` drives a headed Chromium app window on the real production build (`next start`, real OpenRouter; failure scene on the invalid-key instance). No request interception, no terminal or secrets on screen.
+
+Scenes: (1) return of a smartphone from form to decision; (2) complaint with photo, chat question "Jaki model zgłosiłem?", new information (the laptop fell) → updated decision; (3) validation errors on an empty submit; (4) processing error on the invalid-key instance + "Spróbuj ponownie"; (5) "Nowe zgłoszenie" dialog — cancel, then confirm.
+
+| Key frame | Shows |
+|---|---|
+| ![](screenshots/T21a-01-form.png) `T21a-01-form.png` | Return form being filled |
+| ![](screenshots/T21a-02-processing.png) `T21a-02-processing.png` | Processing stage |
+| ![](screenshots/T21a-03-return-decision.png) `T21a-03-return-decision.png` | Form disabled while the decision is prepared |
+| ![](screenshots/T21a-04-complaint-chat.png) `T21a-04-complaint-chat.png` | Complaint decision in the chat |
+| ![](screenshots/T21a-05-updated-decision.png) `T21a-05-updated-decision.png` | "Zgłoszony model to ThinkBook 14." and the new information being answered ("Asystent pisze…") |
+| ![](screenshots/T21a-06-validation.png) `T21a-06-validation.png` | Validation errors |
+| ![](screenshots/T21a-07-error-banner.png) `T21a-07-error-banner.png` | AC-13 banner with values kept |
+| ![](screenshots/T21a-08-new-case-dialog.png) `T21a-08-new-case-dialog.png` | New-case dialog |
+
+To play it inline in the PR description, drag the same file into the GitHub PR editor; GitHub also plays the committed file from its file view.

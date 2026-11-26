@@ -4,6 +4,8 @@
  * Requires: primary instance on :3000 (real key) and failure instance on :3001 (invalid key).
  * Run via scripts/record-demo.sh, or alone: `npx tsx scripts/demo-flow.ts`.
  */
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { chromium, type Page } from "@playwright/test";
@@ -60,12 +62,16 @@ async function newCase(page: Page): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const browser = await chromium.launch({
+  // A persistent context opens exactly one window, so --window-size/--app apply to the recorded window.
+  const userDataDir = mkdtempSync(join(tmpdir(), "poc-demo-"));
+  const context = await chromium.launchPersistentContext(userDataDir, {
     headless: false,
+    viewport: null,
+    locale: "pl-PL",
+    timezoneId: "Europe/Warsaw",
     args: ["--window-position=0,0", "--window-size=1280,800", `--app=${PRIMARY}`],
   });
-  const context = await browser.newContext({ viewport: null, locale: "pl-PL", timezoneId: "Europe/Warsaw" });
-  const page = await context.newPage();
+  const page = context.pages()[0] ?? (await context.newPage());
   page.on("dialog", (dialog) => void dialog.accept());
 
   // Scene 1 — return, happy path to the decision.
@@ -115,7 +121,7 @@ async function main(): Promise<void> {
   await newCase(page);
   await pause(page, 1500);
 
-  await browser.close();
+  await context.close();
 }
 
 main().catch((error: unknown) => {
