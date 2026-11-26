@@ -16,6 +16,7 @@ secrets
 # .claude/skills/ holds the CLI's links to them; .claude/worktrees/ holds agent worktrees.
 .agents/skills/*
 !.agents/skills/deep-source-research/
+!.agents/skills/plan-orchestrated-implementation/
 .claude/skills/
 .claude/worktrees/
 __pycache__/
