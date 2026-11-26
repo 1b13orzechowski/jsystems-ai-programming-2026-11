@@ -160,7 +160,7 @@ export type Decision = z.infer<typeof DecisionSchema>;
 
 /** Input of the chat tool `issueUpdatedDecision` (ADR-002 §3.5): a new draft plus why it changed. */
 export const UpdatedDecisionInputSchema = DecisionDraftSchema.extend({
-  changeReasonPl: z.string().min(1).max(600),
+  changeReasonPl: z.string().min(1).max(400),
 });
 export type UpdatedDecisionInput = z.infer<typeof UpdatedDecisionInputSchema>;
 
