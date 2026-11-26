@@ -2,7 +2,7 @@
 
 Recorded on 2026-11-26 with `scripts/capture-openrouter.ts` (run from `app/`: `npx tsx --env-file=.env.local scripts/capture-openrouter.ts [zwrot|reklamacja|chat|errors]`) against `https://openrouter.ai/api/v1/chat/completions`, client `ai@7.0.181` + `@openrouter/ai-sdk-provider@3.1.0`, requested model `openai/gpt-6-luna`, provider options `reasoning.effort` (analysis/chat `low`, decision `medium`) and `provider.require_parameters: true`.
 
-Each JSON file holds: capture name, date, target, requested model, answering provider, the case input/window used, every HTTP exchange (request body, response status, response headers, raw response body — JSON or SSE text) and the AI SDK result (`sdkResult`). Unit/integration mocks are derived only from these files (AGENTS.md mock rule, plan §6a).
+Each JSON file holds: capture name, date, target, requested model, answering provider, the case input/window used, every HTTP exchange (request body, response status, response headers, raw response body — JSON or SSE text) and the AI SDK result (`sdkResult`). Unit/integration mocks are derived only from these files (AGENTS.md mock rule, ADR-000 §10).
 
 Redactions (the only differences from the wire):
 - request bodies: image data URLs replaced by `<redacted image data url: N chars, sha256 …>`;

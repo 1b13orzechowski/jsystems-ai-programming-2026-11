@@ -1,6 +1,6 @@
 // Replays real OpenRouter HTTP exchanges recorded by scripts/capture-openrouter.ts (T10).
 // Injected as `fetch` into the real OpenRouter provider (createModels(env, { fetch })), so the
-// provider parses the verbatim recorded response. Only the external LLM is replaced (plan §6a).
+// provider parses the verbatim recorded response. Only the external LLM is replaced (ADR-000 §10).
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 

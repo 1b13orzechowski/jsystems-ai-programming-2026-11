@@ -1,4 +1,4 @@
-// ADR-000 §10 and plan §6a: E2E specs run against the real stack and never intercept or fake requests.
+// ADR-000 §10: E2E specs run against the real stack and never intercept or fake requests.
 // Scanner limits: plain regex search over the spec and helper files; dynamic construction is not detected.
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -43,7 +43,7 @@ function listSpecFiles(dir: string): string[] {
 
 const E2E_DIR = join(process.cwd(), "tests", "e2e");
 
-describe("real-stack E2E guard (plan §6a, ADR-000 §10)", () => {
+describe("real-stack E2E guard (ADR-000 §10)", () => {
   it("detects request interception and fake servers in an in-memory sample", () => {
     const sample = [
       "await page.route('**/api/cases', (route) => route.fulfill({ status: 200 }));",

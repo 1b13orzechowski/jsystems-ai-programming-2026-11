@@ -1,6 +1,6 @@
 # Captures
 
-Real recorded responses used to derive unit/integration mocks (AGENTS.md mock rule, plan §6a). Nothing here is written by hand.
+Real recorded responses used to derive unit/integration mocks (AGENTS.md mock rule, ADR-000 §10). Nothing here is written by hand.
 
 | Folder | What | Recorded by |
 |---|---|---|

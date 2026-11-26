@@ -5,7 +5,7 @@ import { defineConfig, devices } from "@playwright/test";
 // - 3001 failure: invalid OpenRouter key -> real authentication error (AC-13 failure specs only)
 // - 3002 timeout: real key + test-only 1 s budget (ADR-003 A-05, AC-13 timeout spec only)
 // `npm run test:e2e` builds once before Playwright starts, so the instances never race on `.next/`.
-// Nothing here intercepts requests: E2E runs against the real stack (plan §6a).
+// Nothing here intercepts requests: E2E runs against the real stack (ADR-000 §10).
 
 export const PRIMARY_URL = "http://localhost:3000";
 export const FAILURE_URL = "http://localhost:3001";
