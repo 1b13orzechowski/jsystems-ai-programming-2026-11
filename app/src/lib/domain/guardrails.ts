@@ -27,7 +27,7 @@ const SAFE_NEXT_STEP = "Pracownik serwisu skontaktuje się w sprawie zgłoszenia
 
 // G6 patterns: currency amounts and forbidden commitments (case-insensitive).
 const FORBIDDEN_PATTERNS: readonly RegExp[] = [
-  /\d+[\s,.]*(zł|pln|eur|€|\$)/i,
+  /\d+[\s,.]*(zł|pln|eur|€|\$)(?![\p{L}\p{N}])/iu,
   /zwrot pieniędzy w ciągu/i,
   /odszkodowanie/i,
   /rekompensata/i,
@@ -86,12 +86,18 @@ export function applyGuardrails(args: {
     cited = [generalRule, ...cited.filter((id) => id !== generalRule)].slice(0, MAX_CITED_RULE_IDS);
   }
 
-  // G2: photo unusable (only when G1 did not apply).
-  if (!windowExpired && !analysis.photoUsable) {
+  // G2: condition cannot be determined (AC-18): unusable photo, item not visible, category mismatch or a named
+  // photo problem. Only when G1 did not apply.
+  const photoUndeterminable =
+    !analysis.photoUsable || !analysis.itemVisible || !analysis.matchesCategory || analysis.photoProblem !== "none";
+  if (!windowExpired && photoUndeterminable) {
     guardrail ??= "photo_unusable";
     label = "wymaga_weryfikacji";
-    photoProblemPl =
-      COPY.decision.photoProblems[analysis.photoProblem === "none" ? "other" : analysis.photoProblem];
+    let problem: keyof typeof COPY.decision.photoProblems = "other";
+    if (analysis.photoProblem !== "none") problem = analysis.photoProblem;
+    else if (!analysis.itemVisible) problem = "no_equipment";
+    else if (!analysis.matchesCategory) problem = "category_mismatch";
+    photoProblemPl = COPY.decision.photoProblems[problem];
     if (!nextSteps.includes(COPY.decision.newCaseWithBetterPhoto)) {
       if (nextSteps.length >= MAX_NEXT_STEPS) {
         nextSteps = [...nextSteps.slice(0, MAX_NEXT_STEPS - 1), COPY.decision.newCaseWithBetterPhoto];

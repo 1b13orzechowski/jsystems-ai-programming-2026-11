@@ -10,7 +10,7 @@ vi.mock("server-only", () => ({}));
 import { loadPolicy, extractRuleIds } from "@/lib/ai/policies";
 
 const FORBIDDEN_PATTERNS: ReadonlyArray<RegExp | string> = [
-  /\d+[\s,.]*(zł|pln|eur|€|\$)/i,
+  /\d+[\s,.]*(zł|pln|eur|€|\$)(?![\p{L}\p{N}])/iu,
   "zwrot pieniędzy w ciągu",
   "odszkodowanie",
   "rekompensata",

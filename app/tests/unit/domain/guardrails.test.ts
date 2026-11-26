@@ -204,6 +204,44 @@ describe("applyGuardrails G2: unusable photo", () => {
   });
 });
 
+describe("applyGuardrails G2: category mismatch and item not visible (AC-18)", () => {
+  it("sends a category mismatch to verification even when the photo is otherwise usable", () => {
+    const result = run({
+      analysis: { photoUsable: true, itemVisible: true, matchesCategory: false, photoProblem: "none", confidence: "high" },
+    });
+
+    expect(result.label).toBe("wymaga_weryfikacji");
+    expect(result.guardrailApplied).toBe("photo_unusable");
+    expect(result.photoProblemPl).toBe(COPY.decision.photoProblems.category_mismatch);
+    expect(result.nextStepsPl).toEqual([RETURN_STEP, NEW_CASE_STEP]);
+  });
+
+  it("names no_equipment when the item is not visible", () => {
+    const result = run({ analysis: { photoUsable: true, itemVisible: false, photoProblem: "none" } });
+
+    expect(result.label).toBe("wymaga_weryfikacji");
+    expect(result.guardrailApplied).toBe("photo_unusable");
+    expect(result.photoProblemPl).toBe(COPY.decision.photoProblems.no_equipment);
+    expect(result.nextStepsPl).toContain(NEW_CASE_STEP);
+  });
+
+  it("names the model mismatch when photoProblem is model_mismatch and the photo is usable", () => {
+    const result = run({ analysis: { photoUsable: true, photoProblem: "model_mismatch" } });
+
+    expect(result.label).toBe("wymaga_weryfikacji");
+    expect(result.guardrailApplied).toBe("photo_unusable");
+    expect(result.photoProblemPl).toBe(COPY.decision.photoProblems.model_mismatch);
+  });
+
+  it("lets G1 keep priority over a category mismatch", () => {
+    const result = run({ purchaseDate: "2026-11-05", analysis: { matchesCategory: false } });
+
+    expect(result.label).toBe("odrzucono");
+    expect(result.guardrailApplied).toBe("window_expired");
+    expect(result.photoProblemPl).toBeUndefined();
+  });
+});
+
 describe("applyGuardrails G3: return with signs of use", () => {
   it("sends a return with signs of use to verification", () => {
     const result = run({ analysis: { signsOfUse: ["rysy"] } });
@@ -268,6 +306,27 @@ describe("applyGuardrails G5: unknown rule IDs", () => {
 });
 
 describe("applyGuardrails G6: forbidden commitments", () => {
+  it.each([
+    "Na zdjęciu widać 2 złamane zawiasy.",
+    "Port USB 3.0 złącza jest uszkodzony.",
+    "Zgodnie z R-3. Europejski standard dopuszcza takie zużycie.",
+  ])("does not treat ordinary words as currency: %s", (text) => {
+    const result = run({ draft: { justificationPl: text } });
+
+    expect(result.label).toBe("zaakceptowano");
+    expect(result.justificationPl).toBe(text);
+    expect(result.guardrailApplied).toBeUndefined();
+  });
+
+  it.each(["499 zł", "499,00 zł.", "100 PLN", "50 €", "20 EUR", "300 $", "1 299,99 PLN"])(
+    "still forbids the amount %s",
+    (amount) => {
+      const result = run({ draft: { justificationPl: `Zwrócimy ${amount} Sprzęt kwalifikuje się do zwrotu.` } });
+
+      expect(result.guardrailApplied).toBe("forbidden_content");
+    },
+  );
+
   it.each(["499 zł", "100 PLN", "50 €", "20 EUR", "300 $"])(
     "removes a sentence with the amount %s and sends the case to verification",
     (amount) => {
