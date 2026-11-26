@@ -1,0 +1,18 @@
+# Source: arXiv 2412.00559v2 HTML Table 4 (Findings EMNLP 2025), DOM extract by coordinator 2026-11-24
+model,LEK_pl,LEK_en,LDEK_pl,LDEK_en
+BioMistral-7B,26.26,32.74,24.96,26.78
+Meditron3-8B,45.99,60.34,37.97,43.35
+Meditron3-70B,68.37,66.75,47.43,45.97
+medllama3-v20,40.93,52.27,35.09,38.45
+Llama3-OpenBioLLM-70B,61.33,65.92,41.77,45.89
+JSL-MedLlama-3-8B-v2.0,35.98,54.09,31.33,39.44
+Qwen2.5-72B-Instruct,76.87,81.93,58.35,63.33
+Qwen2.5-7B-Instruct,51.92,67.73,43.71,48.38
+Llama-3.1-8B-Instruct,51.25,64.69,41.06,47.71
+Llama-3.1-70B-Instruct,80.94,82.60,61.75,63.17
+Llama-3.2-3B-Instruct,39.22,52.08,32.16,36.87
+Mistral-Small-Instruct-2409,51.72,63.70,40.90,43.47
+Mistral-Large-Instruct-2407,76.75,82.40,56.29,62.14
+Bielik-11B-v2.2-Instruct,62.36,56.98,43.20,42.88
+gpt-4o-mini-2024-07-18,75.88,75.92,54.94,56.88
+gpt-4o-2024-08-06,89.96,88.69,73.89,72.51

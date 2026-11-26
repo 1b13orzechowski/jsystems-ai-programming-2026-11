@@ -1,0 +1,9 @@
+# Source: arXiv 2506.04079 EuroLLM-9B tech report, Table 15 (EN) vs Table 35 (PL), post-trained models; DOM extract by coordinator 2026-11-24. PL benchmarks are machine-translated versions -> gap mixes language + translation effects.
+model,ARC_en,ARC_pl,HellaSwag_en,HellaSwag_pl,MMLU_en,MMLU_pl,TruthfulQA_en,TruthfulQA_pl
+Gemma-2-9B-IT,78.23,64.32,78.87,64.18,71.87,65.11,60.49,62.42
+LLaMa-3.1-8B-IT,66.32,50.58,77.39,56.19,68.25,57.67,52.99,58.13
+Qwen-2.5-7B-IT,67.96,48.51,73.46,54.68,73.41,63.91,62.45,59.39
+Aya-Expanse-8B,66.11,54.63,78.37,63.88,62.01,54.69,52.28,57.43
+Mistral-7B-IT,75.79,58.31,82.00,55.89,60.67,50.06,66.01,61.72
+Salamandra-7B-IT,66.91,55.52,76.40,63.40,52.54,47.24,50.87,52.89
+EuroLLM-9B-IT,68.68,60.10,76.38,64.13,58.36,55.54,49.77,55.34

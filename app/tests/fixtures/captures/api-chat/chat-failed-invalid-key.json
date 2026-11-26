@@ -1,0 +1,25 @@
+{
+  "capture": "chat-failed-invalid-key",
+  "capturedAt": "2026-11-26T11:43:23.567Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3001/api/chat",
+  "durationMs": 132,
+  "request": {
+    "case": "success-reklamacja-laptop-1",
+    "instance": "port 3001 started with an invalid OpenRouter key (same CASE_SIGNING_SECRET)"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "text/event-stream",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "x-accel-buffering": "no",
+      "x-vercel-ai-ui-message-stream": "v1"
+    },
+    "body": "data: {\"type\":\"start\"}\n\ndata: {\"type\":\"error\",\"errorText\":\"CHAT_FAILED\"}\n\ndata: [DONE]\n\n"
+  }
+}

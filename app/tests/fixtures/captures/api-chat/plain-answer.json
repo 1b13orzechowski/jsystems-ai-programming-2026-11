@@ -1,0 +1,25 @@
+{
+  "capture": "plain-answer",
+  "capturedAt": "2026-11-26T11:43:17.997Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3000/api/chat",
+  "durationMs": 1340,
+  "request": {
+    "case": "success-reklamacja-laptop-1",
+    "userText": "Jaki model zgłosiłem?"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "text/event-stream",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "x-accel-buffering": "no",
+      "x-vercel-ai-ui-message-stream": "v1"
+    },
+    "body": "data: {\"type\":\"start\"}\n\ndata: {\"type\":\"start-step\"}\n\ndata: {\"type\":\"text-start\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"Z\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"g\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"ł\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"osi\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"ł\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"(a\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\")\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\" Pan\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"/P\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"ani\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\" laptop\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\" Think\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"Book\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\" \"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\"14\"}\n\ndata: {\"type\":\"text-delta\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\",\"delta\":\".\"}\n\ndata: {\"type\":\"text-end\",\"id\":\"gen-1795693396-l2lC2uiQ7p8AAzCOc9tM\"}\n\ndata: {\"type\":\"finish-step\"}\n\ndata: {\"type\":\"finish\",\"finishReason\":\"stop\"}\n\ndata: [DONE]\n\n"
+  }
+}

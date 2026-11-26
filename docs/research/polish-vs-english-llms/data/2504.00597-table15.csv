@@ -1,0 +1,7 @@
+# Source: arXiv 2504.00597v4 "On the Consistency of Multilingual Context Utilization in RAG", Table 15 (MKQA, single-passage mRAG, strict lexical accuracy %); DOM extract by coordinator 2026-11-24.
+# non = no retrieval; in = gold passage in query language; out = gold passage in another language (bracket = share answered correctly but in wrong language). Aya=Aya-Expanse-8B, Llama=Llama-3.2-3B-Instruct, Gemma=Gemma-2-9B-it, Qwen=Qwen2.5-7B-Instruct (model versions per agent read of paper text).
+lang,Aya_non,Aya_in,Aya_out,Llama_non,Llama_in,Llama_out,Gemma_non,Gemma_in,Gemma_out,Qwen_non,Qwen_in,Qwen_out
+en,58.0,87.5,69.4,61.8,82.4,63.9,65.0,79.8,75.7,55.6,86.0,81.7
+de,52.8,84.4,78.2,46.0,70.6,65.3,58.3,75.9,73.7,44.6,78.2,70.5
+pl,50.1,79.2,68.0,35.3,60.6,51.5,55.0,67.8,62.0,36.9,68.9,59.1
+ru,43.6,79.6,59.7,23.7,56.8,37.7,42.8,68.8,50.6,30.7,71.0,51.2

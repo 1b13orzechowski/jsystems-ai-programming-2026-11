@@ -1,0 +1,31 @@
+{
+  "capture": "processing-failed-invalid-key",
+  "capturedAt": "2026-11-26T11:43:01.674Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3001/api/case",
+  "durationMs": 511,
+  "request": {
+    "fields": {
+      "caseType": "zwrot",
+      "category": "Smartfon",
+      "model": "Galaxy S30",
+      "purchaseDate": "2026-11-23",
+      "reason": ""
+    },
+    "instance": "port 3001 started with an invalid OpenRouter key"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "text/event-stream",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "x-accel-buffering": "no",
+      "x-vercel-ai-ui-message-stream": "v1"
+    },
+    "body": "data: {\"type\":\"data-stage\",\"id\":\"stage\",\"data\":{\"stage\":\"analyzing\"},\"transient\":true}\n\ndata: {\"type\":\"error\",\"errorText\":\"PROCESSING_FAILED\"}\n\ndata: [DONE]\n\n"
+  }
+}

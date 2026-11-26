@@ -1,0 +1,11 @@
+# Source: arXiv 2503.10497 MMLU-ProX Table 3 (accuracy %, 29 languages; Polish NOT included); DOM extract by coordinator 2026-11-24. Note: GPT-4o EN 59.9 < CS 70.1 is as printed in the paper (anomaly in source, not transcription).
+lang,o4-mini,GPT-4.1,GPT-4o,DeepSeek-R1,DeepSeek-V3,Llama3.3-70B,Gemma3-27B,Qwen3-235B,Qwen3-235B-Think
+EN,73.7,79.8,59.9,79.5,79.6,65.7,66.5,73.5,80.7
+DE,73.5,76.4,69.6,76.7,75.1,59.8,61.0,71.3,80.4
+FR,72.2,75.7,66.7,81.3,76.3,62.1,63.5,72.5,80.6
+RU,62.0,71.2,62.0,76.4,74.9,61.1,62.5,72.9,77.0
+UK,73.3,76.4,56.8,76.8,74.2,59.9,61.7,72.5,78.8
+SR,72.6,76.9,70.6,80.9,72.9,63.0,61.7,71.1,80.2
+CS,73.5,77.5,70.1,76.8,74.7,63.8,62.6,71.8,80.5
+ZH,72.6,75.5,64.6,78.0,73.9,58.4,60.4,70.5,77.4
+SW,66.9,71.9,58.6,75.0,63.4,49.0,52.8,56.3,70.8

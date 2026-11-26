@@ -1,0 +1,10 @@
+# Source: arXiv 2604.10799 (Bielik v3 tokenizer report, 2026) Table 1: Polish Constitution preamble, same text PL vs EN; DOM extract by coordinator 2026-11-24. "Bielik 11B v3" row = original Mistral-v0.1-based tokenizer.
+tokenizer,vocab,pl_tokens,en_tokens,ratio_pl_en
+APT3,31980,344,615,0.56
+APT4,32000,375,631,0.59
+Bielik-11B-v3 (Mistral v0.1 vocab),32128,747,408,1.83
+EuroLLM,128000,437,404,1.08
+Llama 3.2/SmolLM3,128256,653,371,1.76
+Apertus/Mistral Small 3.1,131072,547,377,1.45
+Qwen3,151669,625,373,1.68
+Gemma3,262145,510,383,1.33

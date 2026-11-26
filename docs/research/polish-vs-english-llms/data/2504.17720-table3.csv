@@ -1,0 +1,10 @@
+# Source: arXiv 2504.17720 "Are Large Language Models for Education Reliable for All Languages?" HTML Table 3 (misconception identification accuracy). DOM extract by coordinator 2026-11-24.
+# "en_prompt" = English task instructions + content in target language; "tr_prompt" = instructions translated into target language. Marks: ★ >=10% sig. lower than English, ⋆ >=5%.
+lang,prompt,GPT4o,Llama,Claude,Gemini,Mistral,CmdA
+English,-,97.6,96.2,95.1,94.0,95.0,95.3
+Ukrainian,en_prompt,95.7,94.9,92.9,93.3,94.4,94.9
+Ukrainian,tr_prompt,95.6,94.3,56.6,90.4,94.2,93.9
+Czech,en_prompt,96.9,95.1,94.5,92.3,94.5,94.1
+Czech,tr_prompt,96.6,95.8,70.2,81.6,41.0,94.5
+German,en_prompt,96.0,96.2,94.6,84.6,95.1,95.2
+German,tr_prompt,95.9,96.6,94.0,74.0,94.9,95.2
