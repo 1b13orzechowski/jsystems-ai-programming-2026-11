@@ -1,0 +1,30 @@
+{
+  "capture": "validation-400",
+  "capturedAt": "2026-11-26T11:43:01.143Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3000/api/case",
+  "durationMs": 31,
+  "request": {
+    "fields": {
+      "caseType": "zwrot",
+      "category": "Smartfon",
+      "model": "",
+      "purchaseDate": "2026-11-23",
+      "reason": ""
+    },
+    "note": "empty model"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": "{\"error\":\"VALIDATION_FAILED\",\"fields\":[\"model\"]}"
+  }
+}

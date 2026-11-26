@@ -1,0 +1,35 @@
+{
+  "capture": "success-zwrot-phone-1",
+  "capturedAt": "2026-11-26T11:42:50.889Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3000/api/case",
+  "durationMs": 10114,
+  "request": {
+    "fields": {
+      "caseType": "zwrot",
+      "category": "Smartfon",
+      "model": "Galaxy S30",
+      "purchaseDate": "2026-11-23",
+      "reason": ""
+    },
+    "photo": {
+      "source": "phone-1.jpg",
+      "sentBytes": 87088,
+      "type": "image/jpeg"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "text/event-stream",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "x-accel-buffering": "no",
+      "x-vercel-ai-ui-message-stream": "v1"
+    },
+    "body": "data: {\"type\":\"data-stage\",\"id\":\"stage\",\"data\":{\"stage\":\"analyzing\"},\"transient\":true}\n\ndata: {\"type\":\"data-stage\",\"id\":\"stage\",\"data\":{\"stage\":\"deciding\"},\"transient\":true}\n\ndata: {\"type\":\"data-case\",\"id\":\"case\",\"data\":{\"caseId\":\"62c37347-8cee-4ffe-bd6c-72e055369ea5\",\"firstMessage\":{\"id\":\"62c37347-8cee-4ffe-bd6c-72e055369ea5\",\"role\":\"assistant\",\"parts\":[{\"type\":\"text\",\"text\":\"Dzień dobry,\\nPrzygotowaliśmy wstępną decyzję w sprawie zgłoszenia: zwrot — Galaxy S30.\"},{\"type\":\"data-decision\",\"id\":\"decision-initial\",\"data\":{\"label\":\"wymaga_weryfikacji\",\"justificationPl\":\"Termin zwrotu mieści się w 14 dniach. Nie można jednak wiarygodnie ocenić produktu na podstawie zdjęcia: widoczny telefon nie odpowiada zgłoszonemu modelowi. Ostateczna ocena wymaga sprawdzenia produktu przez serwis (Z-7).\",\"citedRuleIds\":[\"Z-1\",\"Z-7\"],\"nextStepsPl\":[\"Sprawę musi ocenić pracownik.\",\"Może Pani/Pan rozpocząć nową sprawę i dołączyć wyraźne zdjęcie zgłoszonego modelu.\",\"Proszę zachować dowód zakupu, potrzebny do potwierdzenia daty zakupu (Z-6).\",\"Może Pan/Pani rozpocząć nowe zgłoszenie z lepszym zdjęciem.\"],\"photoProblemPl\":\"Sprzęt na zdjęciu nie pasuje do podanego modelu.\",\"kind\":\"initial\",\"guardrailApplied\":\"photo_unusable\",\"disclaimerPl\":\"To jest wstępna decyzja wygenerowana automatycznie. Ostateczne rozpatrzenie zgłoszenia nastąpi po fizycznej weryfikacji sprzętu przez nasz serwis.\"}}]},\"decision\":{\"label\":\"wymaga_weryfikacji\",\"justificationPl\":\"Termin zwrotu mieści się w 14 dniach. Nie można jednak wiarygodnie ocenić produktu na podstawie zdjęcia: widoczny telefon nie odpowiada zgłoszonemu modelowi. Ostateczna ocena wymaga sprawdzenia produktu przez serwis (Z-7).\",\"citedRuleIds\":[\"Z-1\",\"Z-7\"],\"nextStepsPl\":[\"Sprawę musi ocenić pracownik.\",\"Może Pani/Pan rozpocząć nową sprawę i dołączyć wyraźne zdjęcie zgłoszonego modelu.\",\"Proszę zachować dowód zakupu, potrzebny do potwierdzenia daty zakupu (Z-6).\",\"Może Pan/Pani rozpocząć nowe zgłoszenie z lepszym zdjęciem.\"],\"photoProblemPl\":\"Sprzęt na zdjęciu nie pasuje do podanego modelu.\",\"kind\":\"initial\",\"guardrailApplied\":\"photo_unusable\",\"disclaimerPl\":\"To jest wstępna decyzja wygenerowana automatycznie. Ostateczne rozpatrzenie zgłoszenia nastąpi po fizycznej weryfikacji sprzętu przez nasz serwis.\"},\"analysisSummaryPl\":\"Widoczny smartfon z mocno popękanym ekranem; na wyświetlaczu widać ciemne uszkodzenie obrazu. Interfejs wygląda na system iPhone, więc widoczny model nie odpowiada podanej kategorii modelu Galaxy S30.\",\"caseToken\":\"eyJ2IjoxLCJjYXNlSWQiOiI2MmMzNzM0Ny04Y2VlLTRmZmUtYmQ2Yy03MmUwNTUzNjllYTUiLCJpbnB1dCI6eyJjYXNlVHlwZSI6Inp3cm90IiwiY2F0ZWdvcnkiOiJTbWFydGZvbiIsIm1vZGVsIjoiR2FsYXh5IFMzMCIsInB1cmNoYXNlRGF0ZSI6IjIwMjYtMTEtMjMiLCJyZWFzb24iOiIifSwiYW5hbHlzaXMiOnsicGhvdG9Vc2FibGUiOmZhbHNlLCJwaG90b1Byb2JsZW0iOiJtb2RlbF9taXNtYXRjaCIsIml0ZW1WaXNpYmxlIjp0cnVlLCJtYXRjaGVzQ2F0ZWdvcnkiOnRydWUsInNpZ25zT2ZVc2UiOlsiUMSZa25pxJl0YSBwcnplZG5pYSBzenliYS9la3JhbiJdLCJkYW1hZ2VzIjpbeyJ0eXBlIjoiUm96bGVnxYJlIHDEmWtuacSZY2lhIGVrcmFudSBpIHVzemtvZHplbmllIHd5xZt3aWV0bGFjemEiLCJsb2NhdGlvbiI6IlByemVkbmlhIGN6xJnFm8SHIHRlbGVmb251LCBnxYLDs3duaWUgZ8Ozcm5hIGkgbGV3YSBzdHJvbmEgZWtyYW51Iiwic2V2ZXJpdHkiOiJoaWdoIn1dLCJwcm9iYWJsZUNhdXNlIjoibWVjaGFuaWNhbF9pbXBhY3QiLCJyZXNlbGxhYmxlQXNOZXciOmZhbHNlLCJjb25maWRlbmNlIjoiaGlnaCIsInN1bW1hcnlQbCI6IldpZG9jem55IHNtYXJ0Zm9uIHogbW9jbm8gcG9wxJlrYW55bSBla3JhbmVtOyBuYSB3ecWbd2lldGxhY3p1IHdpZGHEhyBjaWVtbmUgdXN6a29kemVuaWUgb2JyYXp1LiBJbnRlcmZlanMgd3lnbMSFZGEgbmEgc3lzdGVtIGlQaG9uZSwgd2nEmWMgd2lkb2N6bnkgbW9kZWwgbmllIG9kcG93aWFkYSBwb2RhbmVqIGthdGVnb3JpaSBtb2RlbHUgR2FsYXh5IFMzMC4ifSwiZGVjaXNpb24iOnsibGFiZWwiOiJ3eW1hZ2Ffd2VyeWZpa2FjamkiLCJqdXN0aWZpY2F0aW9uUGwiOiJUZXJtaW4gendyb3R1IG1pZcWbY2kgc2nEmSB3IDE0IGRuaWFjaC4gTmllIG1vxbxuYSBqZWRuYWsgd2lhcnlnb2RuaWUgb2NlbmnEhyBwcm9kdWt0dSBuYSBwb2RzdGF3aWUgemRqxJljaWE6IHdpZG9jem55IHRlbGVmb24gbmllIG9kcG93aWFkYSB6Z8WCb3N6b25lbXUgbW9kZWxvd2kuIE9zdGF0ZWN6bmEgb2NlbmEgd3ltYWdhIHNwcmF3ZHplbmlhIHByb2R1a3R1IHByemV6IHNlcndpcyAoWi03KS4iLCJjaXRlZFJ1bGVJZHMiOlsiWi0xIiwiWi03Il0sIm5leHRTdGVwc1BsIjpbIlNwcmF3xJkgbXVzaSBvY2VuacSHIHByYWNvd25pay4iLCJNb8W8ZSBQYW5pL1BhbiByb3pwb2N6xIXEhyBub3fEhSBzcHJhd8SZIGkgZG_FgsSFY3p5xIcgd3lyYcW6bmUgemRqxJljaWUgemfFgm9zem9uZWdvIG1vZGVsdS4iLCJQcm9zesSZIHphY2hvd2HEhyBkb3fDs2QgemFrdXB1LCBwb3RyemVibnkgZG8gcG90d2llcmR6ZW5pYSBkYXR5IHpha3VwdSAoWi02KS4iLCJNb8W8ZSBQYW4vUGFuaSByb3pwb2N6xIXEhyBub3dlIHpnxYJvc3plbmllIHogbGVwc3p5bSB6ZGrEmWNpZW0uIl0sInBob3RvUHJvYmxlbVBsIjoiU3ByesSZdCBuYSB6ZGrEmWNpdSBuaWUgcGFzdWplIGRvIHBvZGFuZWdvIG1vZGVsdS4iLCJraW5kIjoiaW5pdGlhbCIsImd1YXJkcmFpbEFwcGxpZWQiOiJwaG90b191bnVzYWJsZSIsImRpc2NsYWltZXJQbCI6IlRvIGplc3Qgd3N0xJlwbmEgZGVjeXpqYSB3eWdlbmVyb3dhbmEgYXV0b21hdHljem5pZS4gT3N0YXRlY3puZSByb3pwYXRyemVuaWUgemfFgm9zemVuaWEgbmFzdMSFcGkgcG8gZml6eWN6bmVqIHdlcnlmaWthY2ppIHNwcnrEmXR1IHByemV6IG5hc3ogc2Vyd2lzLiJ9LCJ3aW5kb3ciOnsic3VibWlzc2lvbkRhdGUiOiIyMDI2LTExLTI2IiwicHVyY2hhc2VEYXRlIjoiMjAyNi0xMS0yMyIsImVsYXBzZWREYXlzIjozLCJlbGFwc2VkTW9udGhzIjowLCJsaW1pdFVuaXQiOiJkYXlzIiwibGltaXRWYWx1ZSI6MTQsIndpdGhpbldpbmRvdyI6dHJ1ZX0sImlzc3VlZEF0IjoxNzk1NjkzMzYxMDc2LCJleHBpcmVzQXQiOjE3OTU3MDA1NjEwNzZ9.l3zHEHZO-sX-kxjdpIo8KdJ8z8vG9TrlyAA7X71TLA0\"}}\n\ndata: [DONE]\n\n"
+  }
+}
