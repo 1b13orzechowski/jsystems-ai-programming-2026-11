@@ -31,3 +31,5 @@ Listed in `openrouter/README.md` for LLM captures. Route-capture variants used b
 
 | Source file | Derivation | Reason | Test |
 |---|---|---|---|
+| `api-case/success-zwrot-phone-1.json` | In-test cut: body truncated before the first `data-case` line (the `[DONE]` line is removed too) | Stream ends without a result → `PROCESSING_FAILED` (ADR-004 §3.2 step 4) | `tests/unit/client/submit-case.test.ts` "returns PROCESSING_FAILED when the stream ends before data-case" |
+| `api-case/success-zwrot-phone-1.json` | In-test delay: the body is enqueued only after 1000 ms and errors on the abort signal; `timeoutMs: 50` | Client 60 s timer aborts the request → `TIMEOUT` (AC-13) | `tests/unit/client/submit-case.test.ts` "aborts the request after timeoutMs and returns TIMEOUT" |
