@@ -52,7 +52,7 @@ describe("composeFirstMessage", () => {
     const text = firstText(composeFirstMessage({ caseInput: CASE_INPUT, decision: DECISION, id: "msg-1" }));
 
     expect(text).toBe(
-      "Dzień dobry,\nPrzygotowaliśmy wstępną decyzję w sprawie zgłoszenia: reklamacja — Galaxy S30.",
+      "Dzień dobry,\n\nPrzygotowaliśmy wstępną decyzję w sprawie zgłoszenia: reklamacja — Galaxy S30.",
     );
   });
 

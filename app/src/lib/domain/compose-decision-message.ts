@@ -13,7 +13,7 @@ export function composeFirstMessage(args: { caseInput: CaseInput; decision: Deci
     parts: [
       {
         type: "text",
-        text: `${COPY.decision.greeting}\nPrzygotowaliśmy wstępną decyzję w sprawie zgłoszenia: ${caseTypeLabel} — ${caseInput.model}.`,
+        text: `${COPY.decision.greeting}\n\nPrzygotowaliśmy wstępną decyzję w sprawie zgłoszenia: ${caseTypeLabel} — ${caseInput.model}.`,
       },
       { type: "data-decision", id: "decision-initial", data: decision },
     ],
