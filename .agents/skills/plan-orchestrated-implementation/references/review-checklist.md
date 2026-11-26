@@ -27,6 +27,11 @@ Run against the draft plan **and** the source documents (PRD, ADRs, design guida
 - Every failure/error acceptance criterion claimed by E2E has a real trigger named in the plan (for example a second app instance with an invalid provider key, real browser offline mode, real invalid inputs). If a condition cannot be produced for real (for example a slow provider), state the known limit and propose an ADR amendment for a test seam instead of mocking.
 - Every mock of an endpoint is derived from a capture task that precedes it — including real error responses — and is either the recording, the recording replayed with a delay, or a minimal documented edit listed in a captures README; captures are refreshed when contracts change. Scan the ADR test tables too: phrases like "mock throws", "never resolves" or "mock stream error" without a capture source are defects.
 - Worker tools verified on this machine; unverified ones marked and gated; pricing checked on official pages on the day.
+- Every command the plan prescribes is allowed by the agent permission configs (for example a denied `curl`, `wget` or `sudo` → use a script or a human `!` step).
+- Fixture and test-data choices obey folder-level rules (READMEs next to sample data); no generated inputs where forbidden; no assertions that presume a model's conclusion about a given input.
+- The request does not contradict the PRD's out-of-scope list or constraints (or a PRD/ADR change is proposed first).
+- Feature mode: cross-plan file ownership clear; predecessor tasks that create the files are named and gated.
+- Baseline (HEAD, working tree, installed tools) is current at the time of saving.
 - Research rules (Context7, `--help`, delegation) stated.
 - Brief path, commit-during-work and delete-after-DoD lifecycle stated; cleanup task exists.
 - Status column is the only tracker (plus Issue IDs if enabled).
