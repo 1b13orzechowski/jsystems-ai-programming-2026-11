@@ -141,14 +141,16 @@ export const RULE_ID_PATTERN = /^[ZR]-\d{1,2}$/;
 
 export const DecisionDraftSchema = z.object({
   label: z.enum(DECISION_LABELS),
-  justificationPl: z.string().min(1).max(1500),
+  justificationPl: z.string().min(1).max(900),
   citedRuleIds: z.array(z.string().regex(RULE_ID_PATTERN)).min(1).max(5),
-  nextStepsPl: z.array(z.string().min(1).max(300)).min(1).max(6),
+  nextStepsPl: z.array(z.string().min(1).max(200)).min(1).max(6),
   photoProblemPl: z.string().min(1).max(300).optional(),
 });
 export type DecisionDraft = z.infer<typeof DecisionDraftSchema>;
 
 export const DecisionSchema = DecisionDraftSchema.extend({
+  // Guardrail G1 prefixes a code-generated window sentence to the model's ≤ 900-char justification.
+  justificationPl: z.string().min(1).max(1200),
   kind: z.enum(DECISION_KINDS),
   changeReasonPl: z.string().min(1).max(600).optional(),
   guardrailApplied: z.enum(GUARDRAILS).optional(),
