@@ -42,7 +42,7 @@ test("TAC-004-04: the chat screen has no serious or critical axe violations", as
   await expectNoSeriousAxeViolations(page);
 });
 
-test("AC-35: a return with a photo and a chat message can be completed with the keyboard only", async ({ page }) => {
+test("AC-35: a return with a photo and a chat message can be completed with the keyboard only", async ({ page, browserName }) => {
   test.setTimeout(180_000);
   await page.goto("/");
 
@@ -60,9 +60,10 @@ test("AC-35: a return with a photo and a chat message can be completed with the 
   await page.getByLabel(COPY.form.labels.model).focus();
   await page.keyboard.type("Galaxy S30");
   await page.keyboard.press("Tab");
-  // Date input in the pl-PL locale: day, month and year segments are typed as digits.
+  // Date input: the segments are typed as digits in the order the browser shows them. Chromium follows the
+  // pl-PL context locale (dd.mm.rrrr); headless Firefox follows the OS region and shows mm/dd/yyyy.
   const [year = "", month = "", day = ""] = daysAgo(2).split("-");
-  await page.keyboard.type(`${day}${month}${year}`);
+  await page.keyboard.type(browserName === "firefox" ? `${month}${day}${year}` : `${day}${month}${year}`);
 
   // Photo: the choose button opens the file chooser from the keyboard.
   const chooser = page.waitForEvent("filechooser");
