@@ -28,7 +28,7 @@ The two Next.js Route Handlers (`src/app/api/case/route.ts`, `src/app/api/chat/r
 | Component | Responsibility |
 |---|---|
 | `api/case/route.ts` | `POST` only. Exports `maxDuration = 60`. Parses `request.formData()`, validates, computes window, runs `analyzeImage` → `decide` → `applyGuardrails` → `composeFirstMessage` → `signCaseToken` inside `createUIMessageStream`, writing transient `data-stage` parts and one final `data-case` part. Returns `createUIMessageStreamResponse`. |
-| `api/chat/route.ts` | `POST` only. Exports `maxDuration = 60`. Parses JSON, verifies token, validates messages, calls `createChatStream`, returns the stream via `toUIMessageStream` + `createUIMessageStreamResponse` with a Polish `onError` message. |
+| `api/chat/route.ts` | `POST` only. Exports `maxDuration = 60`. Parses JSON, verifies token, validates messages, calls `createChatStream`, returns the stream via `toUIMessageStream` + `createUIMessageStreamResponse` with an `onError` that returns the code `CHAT_FAILED` (A-04). |
 | `lib/security/case-token.ts` | `signCaseToken(payload)` → string `base64url(json).base64url(hmac)`; `verifyCaseToken(token, now)` → payload or typed failure (malformed, bad_signature, expired, unsupported_version). Uses `timingSafeEqual`. |
 | `lib/server/request-guards.ts` | Content-type checks, size checks, JPEG magic bytes (`FF D8 FF`), one-submission-at-a-time is client-side (AC-09). |
 | `lib/server/log.ts` | Structured `console` logging with allow-listed fields only. |
@@ -77,7 +77,7 @@ Body limit: 256 KB.
 
 ### `POST /api/chat` response
 
-UI message stream consumed by `useChat`: `start`, `text-start/delta/end`, optional `tool-issueUpdatedDecision` input/output parts, `finish`. On error: error chunk with Polish text "Nie udało się wysłać odpowiedzi" (the client shows its own copy too).
+UI message stream consumed by `useChat`: `start`, `text-start/delta/end`, optional `tool-issueUpdatedDecision` input/output parts, `finish`. On error: error chunk whose text is the code `CHAT_FAILED`; the client maps it to "Nie udało się wysłać odpowiedzi" from `copy-pl.ts` (A-04).
 
 ### `CaseToken`
 
@@ -90,7 +90,7 @@ Payload `{ v: 1, caseId, input (no photo), analysis, decision, window, issuedAt,
 | Endpoint | Success | Errors |
 |---|---|---|
 | `POST /api/case` | 200 stream ending with `data-case` | 400 `VALIDATION_FAILED` (JSON); 413 `PAYLOAD_TOO_LARGE`; 415 `UNSUPPORTED_MEDIA_TYPE`; in-stream `PROCESSING_FAILED` / `TIMEOUT`; 405 for other methods; 500 `CONFIG_ERROR` when env invalid |
-| `POST /api/chat` | 200 stream | 400 `INVALID_MESSAGES`; 401 `INVALID_CASE_TOKEN` (missing, malformed, bad signature, expired); 413; in-stream error; 405 |
+| `POST /api/chat` | 200 stream | in-stream `CHAT_FAILED`; 400 `INVALID_MESSAGES`; 401 `INVALID_CASE_TOKEN` (missing, malformed, bad signature, expired); 413; in-stream error; 405 |
 
 Notes: no auth (PRD 7); no CORS headers (same-origin only); responses set `Cache-Control: no-store`. No endpoint echoes internal error messages, provider names or stack traces to the client.
 
@@ -99,7 +99,7 @@ Notes: no auth (PRD 7); no CORS headers (same-origin only); responses set `Cache
 | Path | Budget | Mechanism |
 |---|---|---|
 | Client submission | 60 s | `AbortController` timer in the form (AC-13) |
-| `/api/case` total | 55 s | `AbortSignal.timeout(55000)` combined with `request.signal` |
+| `/api/case` total | 55 s (test override, see A-05) | `AbortSignal.timeout(budget)` combined with `request.signal`; `budget` = 55000 unless A-05 applies |
 | Analysis step | 25 s | AI SDK `timeout.totalMs` |
 | Decision step | 25 s | AI SDK `timeout.totalMs` |
 | `/api/chat` | 45 s total, first chunk 15 s | AI SDK `timeout` (ADR-002 §3.5) |
@@ -141,6 +141,16 @@ Notes: no auth (PRD 7); no CORS headers (same-origin only); responses set `Cache
 **Decision:** Server sends machine codes; client maps codes to strings in `copy-pl.ts`.
 **Consequences:** (+) no leakage of provider errors; one place for copy. (-) Two layers to keep in sync — covered by integration tests.
 **Review trigger:** None for PoC.
+
+### A-05 Test-only case budget override (`CASE_BUDGET_MS`)
+**Status:** Accepted (amendment, human decision 2026-11-26) · **Date:** 2026-11-26
+**Context:** AC-13 requires a timeout path, and E2E must exercise it for real without mocks (ADR-000 §10 real-call rule). A real slow provider cannot be produced on demand, and `next start` always runs with `NODE_ENV=production`, so a NODE_ENV guard cannot distinguish tests.
+**Decision:** `/api/case` reads `CASE_BUDGET_MS` only when `ALLOW_TEST_BUDGET=true`. The value must be an integer from 1000 to 55000; it replaces the 55 s total budget (step timeouts stay 25 s, so a short budget aborts the real OpenRouter call). If `CASE_BUDGET_MS` is set without the flag or out of range, it is ignored and the env validator logs one warning at startup naming the variable (never values of secrets). Neither variable appears in `app/.env.example` defaults for normal runs; both are documented there as test-only and commented out.
+**Rejected alternatives:**
+- Mock or stub a slow provider in E2E: violates the real-call rule.
+- Guard on `NODE_ENV`: E2E runs the production build, so the guard would block the test.
+**Consequences:** (+) AC-13 timeout path proven end to end against real OpenRouter. (-) One test seam in production code; mitigated by the explicit flag, range check, startup warning and a unit test proving the override is ignored without the flag.
+**Review trigger:** Before any deployment outside local testing: confirm `ALLOW_TEST_BUDGET` is unset in that environment.
 
 ---
 
@@ -207,16 +217,17 @@ sequenceDiagram
 
 | Scenario | Type | Input | Expected output | Edge cases |
 |---|---|---|---|---|
-| Case happy path | Integration | valid FormData, mock models | stream: stage analyzing, stage deciding, data-case with valid token | reason empty for zwrot |
+| Case happy path | Integration | valid FormData, models replaying real captures | stream: stage analyzing, stage deciding, data-case with valid token | reason empty for zwrot |
 | Missing field | Integration | no `model` | 400 VALIDATION_FAILED, fields [model] | each required field |
 | Complaint short reason | Integration | reklamacja, reason "abc" | 400 | 10 chars with spaces |
 | Future purchase date | Integration | today+1 (Warsaw) | 400 | 23:30 UTC boundary |
 | Wrong file type | Integration | PNG bytes labelled image/jpeg | 415 | GIF, empty file |
 | Too large | Integration | 2.1 MB JPEG | 413 | Content-Length missing |
-| Analysis fails | Integration | mock throws | stream error PROCESSING_FAILED, no data-case | schema-invalid JSON |
-| Budget | Integration | mock hangs (fake timers) | TIMEOUT before 55 s | client abort closes upstream call |
+| Analysis fails | Integration | captured real provider error (invalid key) replayed | stream error PROCESSING_FAILED, no data-case | captured body truncated (documented edit) |
+| Budget | Integration | captured success replayed with a delay beyond 55 s (fake timers) | TIMEOUT before 55 s | client abort closes upstream call |
+| Budget override | Unit (env) + E2E | unit: `CASE_BUDGET_MS=1000` with and without `ALLOW_TEST_BUDGET=true`, values 999 / 55001 / "abc"; E2E: third instance with flag + 1000 ms, real submission | unit: override applied only with flag and in range, otherwise 55000 + one warning; E2E: real OpenRouter call aborted, stream error `TIMEOUT`, form restored with banner | flag set without budget → 55000 |
 | Token sign/verify | Unit | payload | round-trip equal | altered byte, wrong secret, expired, v=2 |
-| Chat valid | Integration | 2 messages + token, mock stream | text stream | regenerate trigger |
+| Chat valid | Integration | 2 messages + token, captured chat stream replayed | text stream | regenerate trigger; captured provider error → `CHAT_FAILED` |
 | Chat bad token | Integration | edited payload | 401, mock not called | missing token |
 | Chat message rules | Integration | 2001 chars / whitespace / file part / 41 messages | 400 INVALID_MESSAGES | system role message dropped |
 | Logging | Unit | run case route | log lines contain caseId, step, ms, model; not reason/image/messages | error path |
@@ -229,3 +240,4 @@ sequenceDiagram
 - TAC-003-04: Aborting the client request aborts the upstream LLM call (mock observes `abortSignal.aborted === true`).
 - TAC-003-05: All error responses contain only codes from §5; no stack traces or provider messages (asserted in tests).
 - TAC-003-06: Both routes respond `Cache-Control: no-store` and reject non-POST methods with 405.
+- TAC-003-07: `CASE_BUDGET_MS` changes the budget only when `ALLOW_TEST_BUDGET=true` and the value is 1000–55000; the E2E timeout spec observes a real `TIMEOUT` against real OpenRouter (A-05).

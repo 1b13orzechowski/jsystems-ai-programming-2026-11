@@ -253,8 +253,8 @@ sequenceDiagram
 | Future date | Unit | tomorrow | "Data zakupu nie może być z przyszłości" | date picker disables future days |
 | Photo type/size | Unit | GIF; 11 MB JPEG | AC-07 messages, file not kept | HEIC |
 | Downscale | Unit (mocked canvas/createImageBitmap) | 4000×3000 PNG | JPEG ≤1568 px edge, ≤1.5 MB, type image/jpeg | portrait EXIF; transparent PNG |
-| Processing UI | Unit | mocked stream with two stages | stage texts in order, fields disabled | double click submit → one request |
-| Error restore | Unit | mocked stream error | form values + photo kept, banner + retry | timeout via fake timers 60 s |
+| Processing UI | Unit | captured real `/api/case` success stream replayed with delays | stage texts in order, fields disabled | double click submit → one request |
+| Error restore | Unit | captured real `/api/case` error stream (invalid-key instance) and 400 response replayed | form values + photo kept, banner + retry | captured success delayed beyond 60 s (fake timers) |
 | Decision card | Unit | three labels | distinct badge text + icon + color; disclaimer present | updated kind shows "Zaktualizowana decyzja" |
 | Markdown | Unit | "**pogrubienie**\n1. krok" | `<strong>`, `<ol>`; no `**` visible | partial markdown while streaming |
 | Chat input | Unit | whitespace; Shift+Enter | not sent; newline | disabled while streaming |
@@ -271,7 +271,7 @@ sequenceDiagram
 
 - TAC-004-01: No client component imports `lib/ai`, `lib/security` or `server-only` modules (build fails otherwise).
 - TAC-004-02: The image sent to `/api/case` is always `image/jpeg`, ≤ 1.5 MB, longest edge ≤ 1568 px (asserted on the request in an integration-style unit test).
-- TAC-004-03: Every visible string is sourced from `copy-pl.ts`; a test fails if a JSX text literal outside that file contains letters (lint rule or test scan).
+- TAC-004-03: Every visible or screen-reader string in hand-written code is sourced from `copy-pl.ts`; a test fails if a JSX text literal or `aria-label`/`alt`/`placeholder` literal outside that file contains letters (test scan over `src/app/**` and `src/components/**` excluding `ui/**` and `ai-elements/**`). Generated components in `ui/**` and `ai-elements/**` must not render English text: their default strings (e.g. dialog close "Close", "Send") are replaced by props from `copy-pl.ts` or edited once to Polish, and the E2E suite asserts no English UI text on both screens (AC-33).
 - TAC-004-04: Axe (via `@axe-core/playwright`) reports zero serious/critical violations on both screens.
 - TAC-004-05: Decision badges meet ≥ 4.5:1 contrast and include an icon and text label.
 - TAC-004-06: No browser storage API is called anywhere in `src/` (grep test).

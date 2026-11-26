@@ -6,6 +6,11 @@
 
 Hardware Service Decision Copilot is a **proof of concept (PoC)** of a customer self-service web application for electronics returns and complaints. The customer submits one form with the case details and a single photo of the equipment. The system analyses the photo, applies the company's return or complaint policy and shows a preliminary decision (Approve, Reject or Manual review) with a justification and next steps. The customer can then continue in a chat with the agent to ask questions or add information. The PoC tests whether an AI agent can give consistent, policy-based first-line decisions and so reduce the number of cases that need manual triage by support and service staff.
 
+### 1.1 Context and scale
+- **Company:** a mid-size Polish consumer-electronics retailer selling online and in stores, with its own support and hardware service teams. Not a regulated sector (no finance, public, medical or defence rules); Polish consumer law and GDPR apply.
+- **Scale of this PoC:** internal demo and evaluation by company staff, about 5 concurrent testers and fewer than 200 cases per day, one local deployment. Production rollout, real customers and real customer photos are out of scope and need a new decision.
+- **Data:** synthetic cases and photos only (8.1). Once real customer photos are processed, GDPR requirements (lawful basis, processor agreements, data location of the LLM provider, retention) must be reviewed before rollout.
+
 ---
 
 ## 2. Problem Statement
@@ -234,10 +239,10 @@ Today the customer fills in a generic contact form or sends an e-mail and waits 
 
 | Document | File path | When it is used |
 |---|---|---|
-| Return policy (sample, Polish) | `docs/policies/return-policy.md` | Decision step and chat for "Zwrot" cases |
-| Complaint policy (sample, Polish) | `docs/policies/complaint-policy.md` | Decision step and chat for "Reklamacja" cases |
+| Return policy (sample, Polish) | `app/content/policies/return-policy.md` | Decision step and chat for "Zwrot" cases |
+| Complaint policy (sample, Polish) | `app/content/policies/complaint-policy.md` | Decision step and chat for "Reklamacja" cases |
 
-Both documents are sample company documents created for the PoC. Each rule in them has a short identifier, e.g. `Z-3` or `R-5`, that the agent can cite in its justification. The final file location may be adjusted in the ADR.
+Both documents are sample company documents created for the PoC. Each rule in them has a short identifier, e.g. `Z-3` or `R-5`, that the agent can cite in its justification. The location inside the application was decided in ADR-000 §3; the required rules are listed in ADR-002 §3.6.
 
 ---
 
@@ -374,7 +379,7 @@ flowchart TD
 - **Assumption — purchase date as start date:** Legally, the return and complaint windows start at delivery or taking possession, not at purchase. The PoC uses the declared purchase date as a proxy. Add a delivery-date field if this proves material.
 - **Assumption — no verification of declared data:** Model and purchase date are taken as declared. Verification against purchase history is a later feature.
 - **Open — Manual review follow-up:** With no persistence or notifications in the PoC, "Manual review" ends at the message. The next version needs a case reference and a staff queue.
-- **Open — image size limit for analysis and model choice:** to be decided in the ADR.
+- **Resolved — image size limit for analysis and model choice:** decided in ADR-000 D-06 (JPEG, longest edge ≤ 1568 px, ≤ 1.5 MB) and D-07 (`LLM_MODEL` with optional per-step overrides).
 - **Later features (from the brief):**
   1. Customer data and purchase history lookup.
   2. Persisting every session with all decisions and actions.
