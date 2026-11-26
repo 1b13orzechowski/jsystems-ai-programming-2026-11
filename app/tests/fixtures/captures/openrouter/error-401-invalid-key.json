@@ -1,0 +1,47 @@
+{
+  "capture": "error-401-invalid-key",
+  "capturedAt": "2026-11-26T11:20:59.539Z",
+  "target": "https://openrouter.ai/api/v1/chat/completions",
+  "client": "ai@7.0.181 + @openrouter/ai-sdk-provider@3.1.0 via scripts/capture-openrouter.ts",
+  "requestedModel": "openai/gpt-6-luna",
+  "answeringProvider": "unknown",
+  "step": "error",
+  "exchanges": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "body": {
+          "model": "openai/gpt-6-luna",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Odpowiedz jednym słowem: test"
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "access-control-allow-origin": "*",
+          "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+          "alt-svc": "h3=\":443\"; ma=86400",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Thu, 26 Nov 2026 11:20:59 GMT",
+          "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+          "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+          "server": "cloudflare",
+          "transfer-encoding": "chunked",
+          "x-content-type-options": "nosniff",
+          "x-openrouter-error-origin": "client"
+        },
+        "body": "{\"error\":{\"message\":\"Missing Authentication header\",\"code\":401}}"
+      }
+    }
+  ],
+  "sdkResult": {
+    "thrown": "AI_APICallError: Missing Authentication header"
+  }
+}
