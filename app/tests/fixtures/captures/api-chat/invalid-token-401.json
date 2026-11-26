@@ -1,0 +1,24 @@
+{
+  "capture": "invalid-token-401",
+  "capturedAt": "2026-11-26T11:43:23.435Z",
+  "commit": "6cacc0b",
+  "target": "http://localhost:3000/api/chat",
+  "durationMs": 16,
+  "request": {
+    "case": "success-reklamacja-laptop-1",
+    "note": "one character of the token payload changed"
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "cache-control": "no-store",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": "{\"error\":\"INVALID_CASE_TOKEN\"}"
+  }
+}
