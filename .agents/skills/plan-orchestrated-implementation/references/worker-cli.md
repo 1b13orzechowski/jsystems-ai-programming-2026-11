@@ -15,7 +15,7 @@ Verify every tool on the machine before naming it in a plan: `<tool> --version`,
 |---|---|---|
 | Claude Code subagent | available in session (`Agent` tool) | `Agent` with `model` override and the brief path in the prompt |
 | Claude Code CLI | `claude --version`, `claude -p --help` | `claude -p --model <model> < docs/.agent-briefs/<brief>.md` |
-| OpenCode | `opencode --version`, `opencode run --help`, `opencode models` | `opencode run --model <provider/model> --format json --file docs/.agent-briefs/<brief>.md "Execute this brief and report per its Report section." < /dev/null > <log>.jsonl` (install: `npm install -g opencode-ai@<version>` with human approval) |
+| OpenCode | `opencode --version`, `opencode run --help`, `opencode models`, then a free smoke run (`opencode run -m <free model> "Reply with exactly: OK" < /dev/null`) | `opencode run -m <provider/model> --dir . --format json -f docs/.agent-briefs/<brief>.md "Execute the attached brief. Edit only its listed files. Report per its Report section." < /dev/null > .opencode-runs/<task-id>.jsonl` (gitignore the log folder; never `--auto`, which the help marks dangerous). Install with human approval: `npm install -g opencode-ai@<version>`; if the global prefix needs root, use `npm install -g --prefix ~/.local opencode-ai@<version>` (binary in `~/.local/bin`, which must be on PATH). npm may skip the package postinstall script; confirm with `opencode --version` |
 | Codex | `codex --version`, `codex exec --help` | `codex exec -m <model> --sandbox workspace-write - < docs/.agent-briefs/<brief>.md` |
 | GitHub Copilot CLI | `copilot --version` or `gh copilot --version` | per its `--help`; only if installed and allowed |
 

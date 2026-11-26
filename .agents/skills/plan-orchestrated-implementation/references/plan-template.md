@@ -31,7 +31,7 @@ Mermaid flowchart of task dependencies.
 
 ## 6. Dependency matrix (authoritative)
 | Task | Observable outcome | PRD/ADR links | Prerequisites | Owner/model | Editable files | Verification and handoff | Status | Issue |
-Rows include: prerequisites done by the human (secrets, tool installs), scaffold/bootstrap, shared contracts (orchestrator), real-capture tasks before dependent mocks, implementation tasks (Red → Green → commit), integration, E2E (real), manual QA (real), independent review, PR (separate approval), cleanup (delete plan + briefs).
+Rows include: prerequisites done by the human (secrets, tool installs such as ffmpeg), scaffold/bootstrap, shared contracts (orchestrator), real-capture tasks before dependent mocks, implementation tasks (Red → Green → commit), integration, E2E (real), manual QA (real; screenshots committed to `docs/qa/screenshots/`), independent review, final demo video (ffmpeg, real app, `docs/qa/video/`), PR with links to QA report and video (separate approval), cleanup (delete plan + briefs, keep `docs/qa/`).
 
 ## 6a. Test reality rules
 Table: test type → what is real → what may be mocked (E2E and manual: nothing).
