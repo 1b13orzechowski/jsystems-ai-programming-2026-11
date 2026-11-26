@@ -9,15 +9,12 @@
     },
     "playwright": {
       "type": "stdio",
-      "command": "cmd",
+      "command": "npx",
       "args": [
-        "/c",
-        "npx",
         "-y",
         "@playwright/mcp@latest"
       ],
-      "env": {},
-      "enabled": false
+      "env": {}
     }
   }
 }
