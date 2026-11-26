@@ -24,4 +24,10 @@ Prompts in this script are condensed versions of the ADR-002 instructions; the r
 | `error-unknown-model.json` | `generateText` with `openai/this-model-does-not-exist` | — | 400 | provider error for an invalid model ID |
 
 ## Derived variants
-None yet. Every derived mock (a capture replayed with a delay, or a minimal documented edit such as changed tool arguments or a truncated body) is listed here with its source file and reason when a test introduces it.
+Every derived mock (a capture replayed with a delay, or a minimal documented edit such as changed tool arguments or a truncated body) is listed here with its source file and reason.
+
+| Source file | Derivation | Reason | Test |
+|---|---|---|---|
+| `analysis-zwrot-phone-1.json` | `editBody`: the response `content` string is cut after 20 characters, so the JSON is invalid | malformed provider body must become `ProcessingError` at step `analysis` | `tests/integration/ai/analyze-image.test.ts` |
+| `analysis-zwrot-phone-1.json` | `delayMs: 500` replayed with `timeoutMs: 50` | a slow provider must become `ProcessingError` at step `timeout` well before 500 ms | `tests/integration/ai/analyze-image.test.ts` |
+| `analysis-zwrot-phone-1.json` | `delayMs: 500`; the caller's `AbortController` aborts at 20 ms | a caller abort mid-request must become `ProcessingError` at step `timeout` | `tests/integration/ai/analyze-image.test.ts` |
