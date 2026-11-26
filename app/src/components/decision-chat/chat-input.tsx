@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type DragEvent, type KeyboardEvent } from "react";
+import { useId, useState, type DragEvent, type FormEvent, type KeyboardEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group";
@@ -32,12 +32,17 @@ export function ChatInput({ disabled, onSend }: ChatInputProps) {
     }
   }
 
-  function ignoreDrop(event: DragEvent<HTMLDivElement>) {
+  function ignoreDrop(event: DragEvent<HTMLFormElement>) {
     event.preventDefault();
   }
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    send();
+  }
+
   return (
-    <div className="flex w-full flex-col gap-2" onDragOver={ignoreDrop} onDrop={ignoreDrop}>
+    <form className="flex w-full flex-col gap-2" onSubmit={handleSubmit} onDragOver={ignoreDrop} onDrop={ignoreDrop}>
       <label htmlFor={inputId} className="sr-only">
         {COPY.chat.inputLabel}
       </label>
@@ -58,11 +63,11 @@ export function ChatInput({ disabled, onSend }: ChatInputProps) {
           <span id={counterId} className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
             {COPY.chat.counter(value.length, CHAT_MESSAGE_MAX)}
           </span>
-          <Button type="button" onClick={send} disabled={disabled} className="min-h-11 min-w-11 px-4 text-base">
+          <Button type="submit" disabled={disabled} className="min-h-11 min-w-11 px-4 text-base">
             {COPY.chat.send}
           </Button>
         </div>
       </InputGroup>
-    </div>
+    </form>
   );
 }
