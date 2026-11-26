@@ -35,8 +35,13 @@ export function loadPolicy(caseType: CaseType, dir?: string): Policy {
   const cached = useCache ? defaultCache.get(caseType) : undefined;
   if (cached) return cached;
 
-  const policyDir = dir ?? join(process.cwd(), "content", "policies");
-  const path = join(policyDir, FILE_BY_CASE_TYPE[caseType]);
+  // Static literal paths for the default directory so Next/Turbopack can trace the files into the build.
+  const path =
+    dir !== undefined
+      ? join(/* turbopackIgnore: true */ dir, FILE_BY_CASE_TYPE[caseType]) // test-only directory, not traced
+      : caseType === "zwrot"
+        ? join(process.cwd(), "content/policies/return-policy.md")
+        : join(process.cwd(), "content/policies/complaint-policy.md");
 
   let text: string;
   try {
