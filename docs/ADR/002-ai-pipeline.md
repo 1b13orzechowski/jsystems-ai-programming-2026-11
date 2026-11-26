@@ -72,11 +72,11 @@ Applied in this order to every draft from 3.2 and every updated decision from th
 | # | Rule | Effect | AC |
 |---|---|---|---|
 | G1 | `window.withinWindow == false` | label = odrzucono; justification prefixed by a code-generated Polish sentence stating the window (14 dni / 24 miesiące) and elapsed days/months; cite `Z-1` or `R-1` | AC-16, AC-17 |
-| G2 | `analysis.photoUsable == false` (and G1 not applied) | label = wymaga_weryfikacji; `photoProblemPl` filled from `photoProblem` map; next steps include "Może Pan/Pani rozpocząć nowe zgłoszenie z lepszym zdjęciem." | AC-18 |
+| G2 | `photoUsable == false` or `itemVisible == false` or `matchesCategory == false` or `photoProblem != none` (and G1 not applied; widened 2026-11-26, see A-01 below) | label = wymaga_weryfikacji; `photoProblemPl` filled from `photoProblem` map (`no_equipment` / `category_mismatch` when only the flags say so); next steps include "Może Pan/Pani rozpocząć nowe zgłoszenie z lepszym zdjęciem." | AC-18 |
 | G3 | case = zwrot, label = zaakceptowano, and (`signsOfUse` non-empty or `damages` non-empty or `resellableAsNew == false`) | label = wymaga_weryfikacji | AC-19 |
 | G4 | `analysis.confidence == low` and label = zaakceptowano | label = wymaga_weryfikacji | PRD 11.5 |
 | G5 | Cited rule IDs not in the policy's ID set | drop unknown IDs; if none remain, add the policy's general rule (`Z-1`/`R-1`) | AC-15 |
-| G6 | Forbidden commitments: regex for currency amounts (`\d+[\s,.]*(zł|pln|eur|€|\$)`), "zwrot pieniędzy w ciągu", "odszkodowanie", "rekompensata", "prawnie wiążąc" | label = wymaga_weryfikacji and the offending sentence is removed; flag `guardrailApplied = forbidden_content` | AC-20 |
+| G6 | Forbidden commitments: regex for currency amounts (`\d+[\s,.]*(zł|pln|eur|€|\$)(?![\p{L}\p{N}])`, Unicode flag — the look-ahead keeps words such as "2 złamane", "3.0 złącza" out; amended 2026-11-26), "zwrot pieniędzy w ciągu", "odszkodowanie", "rekompensata", "prawnie wiążąc" | label = wymaga_weryfikacji and the offending sentence is removed; flag `guardrailApplied = forbidden_content` | AC-20 |
 
 `guardrailApplied` records which rule fired (for logs and tests; not shown to the customer).
 
@@ -144,6 +144,12 @@ Window rule: return within window iff `elapsedDays ≤ 14` (purchase day = day 0
 **Rejected alternatives:** `generateObject` (deprecated in AI SDK 7); JSON-in-text parsing (fragile); `experimental_decide` (experimental API, can change in patch releases).
 **Consequences:** (+) schema errors become clean failures (AC-13). (-) A model override without structured outputs fails every request — validated by an integration smoke test against the real endpoint during Manual QA.
 **Review trigger:** If schema failures exceed 2 % of E2E runs.
+
+### A-01 Guardrail amendments from the independent review (2026-11-26)
+**Status:** Accepted (orchestrator decision during T20; PRD wins over this ADR where they differ)
+**Context:** The T20 review found that G2 ignored "item does not match the category" and "no equipment visible" whenever the vision model still set `photoUsable=true`, although PRD AC-18 requires Manual review for those cases; and that the G6 currency pattern matched ordinary Polish words starting with "zł"/"eur" after a number. It also found that the chat accepted client-supplied `issueUpdatedDecision` outputs from the message history.
+**Decision:** G2 fires on any of `!photoUsable`, `!itemVisible`, `!matchesCategory`, `photoProblem != none`. G6 currency pattern requires the currency token not to be followed by a letter or digit. The chat recomputes every historical updated decision server-side from the tool input with the token's analysis and window (`applyGuardrails`), never trusting a client-supplied output, and escapes all customer- and model-derived text inserted into delimited prompt blocks.
+**Consequences:** (+) AC-18, AC-20 and AC-36 hold under model inconsistency and forged history. (-) More cases go to Manual review when the model flags a mismatch.
 
 ### P-02 Guardrails in code override the model
 **Status:** Accepted · **Date:** 2026-11-25
