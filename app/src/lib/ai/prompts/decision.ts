@@ -81,7 +81,7 @@ export function buildDecisionPrompt(args: {
 
   const reasonBlock = ["<customer_reason>", reason, "</customer_reason>"].join("\n");
 
-  const analysisBlock = ["<analysis>", JSON.stringify(analysis), "</analysis>"].join("\n");
+  const analysisBlock = ["<analysis>", escapeClosingTags(JSON.stringify(analysis)), "</analysis>"].join("\n");
 
   const windowBlock = [
     "<window>",

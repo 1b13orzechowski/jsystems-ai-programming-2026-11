@@ -41,8 +41,8 @@ export function buildChatInstructions(args: {
     "</customer_reason>",
     "",
     "<analysis>",
-    `summary: ${analysis.summaryPl}`,
-    JSON.stringify(analysis),
+    `summary: ${escapeClosingTags(analysis.summaryPl)}`,
+    escapeClosingTags(JSON.stringify(analysis)),
     "</analysis>",
     "",
     "<window>",
@@ -55,7 +55,7 @@ export function buildChatInstructions(args: {
     "",
     "<current_decision>",
     `label: ${currentDecision.label}`,
-    JSON.stringify(currentDecision),
+    escapeClosingTags(JSON.stringify(currentDecision)),
     "</current_decision>",
   ].join("\n");
 }
